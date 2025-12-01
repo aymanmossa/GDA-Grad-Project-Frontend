@@ -40,7 +40,7 @@ export class AuthService {
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
- 
+
   private handleSuccess(user: IUser) {
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUser.set(user);

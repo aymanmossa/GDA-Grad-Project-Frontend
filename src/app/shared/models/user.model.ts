@@ -16,5 +16,5 @@ export interface IRegisterRequest{
     email: string;
     nationalId: string;
     address: string;
-    role: 'Vendor' | "Customer";
+    role:  'Admin' | 'Vendor' | "Customer";
 }

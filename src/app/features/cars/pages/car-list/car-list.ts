@@ -1,90 +1,90 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ICar } from '../../../../shared/models/car.model';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CarService } from '../../../../core/services/car.service';
+import { ICar, IMake, IModel, IBodyType, IFuelType, ILocation } from '../../../../shared/models/car.model';
 
 @Component({
   selector: 'app-car-list',
-  imports: [CommonModule],
-  templateUrl: './car-list.html',
-  styleUrl: './car-list.scss',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe],
+  templateUrl: './car-list.html', 
+  styleUrl: './car-list.scss'
 })
-export class CarListComponent {
-  cars: ICar[] = [
-    {
-      carId: "1",
-      get title() { return `${this.year} ${this.make?.name} ${this.model?.name}`; },
-      year: 2022,
-      price: 25000,
-      description: 'Toyota Camry 2022',
-      createdDate: new Date().toISOString(),
-      makeId: 1,
-      modelId: 1,
-      bodyTypeId: 1,
-      fuelId: 1,
-      locId: 1,
-      make: { id: 1, name: "Toyota" },
-      model: { id: 1, name: "Camry", makeId: "1" },
-      fuelType: { id: 1, name: "Petrol" },
-      locationCity: { id: 1, name: "Cairo" },
-      bodyType: { id: 1, name: "Sedan" },
-      carImages: []
-    },
-    {
-      carId: "2",
-      get title() { return `${this.year} ${this.make?.name} ${this.model?.name}`; },
-      year: 2023,
-      price: 23000,
-      description: 'Honda Civic 2023',
-      createdDate: new Date().toISOString(),
-      makeId: 2,
-      modelId: 2,
-      bodyTypeId: 1,
-      fuelId: 1,
-      locId: 1,
-      make: { id: 2, name: "Honda" },
-      model: { id: 2, name: "Civic", makeId: "2" },
-      fuelType: { id: 1, name: "Petrol" },
-      locationCity: { id: 1, name: "Cairo" },
-      bodyType: { id: 1, name: "Sedan" },
-      carImages: []
-    },
-    {
-      carId: "3",
-      get title() { return `${this.year} ${this.make?.name} ${this.model?.name}`; },
-      year: 2021,
-      price: 45000,
-      description: 'Ford F-150 2021',
-      createdDate: new Date().toISOString(),
-      makeId: 3,
-      modelId: 3,
-      bodyTypeId: 2,
-      fuelId: 2,
-      locId: 1,
-      make: { id: 3, name: "Ford" },
-      model: { id: 3, name: "F-150", makeId: "3" },
-      fuelType: { id: 2, name: "Diesel" },
-      locationCity: { id: 1, name: "Cairo" },
-      bodyType: { id: 2, name: "Truck" },
-      carImages: []
-    },
-    {
-      carId: "4",
-      get title() { return `${this.year} ${this.make?.name} ${this.model?.name}`; },
-      year: 2024,
-      price: 40000,
-      description: 'Tesla Model 3 2024',
-      createdDate: new Date().toISOString(),
-      makeId: 4,
-      modelId: 4,
-      bodyTypeId: 1,
-      fuelId: 3,
-      locId: 1,
-      make: { id: 4, name: "Tesla" },
-      model: { id: 4, name: "Model 3", makeId: "4" },
-      fuelType: { id: 3, name: "Electric" },
-      locationCity: { id: 1, name: "Cairo" },
-      bodyType: { id: 1, name: "Sedan" },
-      carImages: []
-    },
-  ]
+export class CarListComponent implements OnInit {
+  private carService = inject(CarService);
+  private fb = inject(FormBuilder);
+
+  // --- Signals ---
+  cars = signal<ICar[]>([]);
+  makes = signal<IMake[]>([]);
+  models = signal<IModel[]>([]);
+  bodyTypes = signal<IBodyType[]>([]);
+  fuelTypes = signal<IFuelType[]>([]);
+  locations = signal<ILocation[]>([]);
+  loading = signal<boolean>(false);
+
+  // --- Filter Form ---
+  filterForm = this.fb.group({
+    search: [''],
+    makeId: [''],
+    modelId: [''],
+    bodyTypeId: [''],
+    fuelId: [''],
+    locId: [''],
+    minPrice: [''],
+    maxPrice: [''],
+    year: ['']
+  });
+
+  ngOnInit() {
+    this.loadLookups();
+    this.applyFilters(); 
+  }
+
+  loadLookups() {
+    this.carService.getMakes().subscribe(res => this.makes.set(res));
+    this.carService.getBodyTypes().subscribe(res => this.bodyTypes.set(res));
+    this.carService.getFuelTypes().subscribe(res => this.fuelTypes.set(res));
+    this.carService.getLocations().subscribe(res => this.locations.set(res));
+  }
+
+  onMakeChange() {
+    const selectedMakeId = this.filterForm.get('makeId')?.value;
+    this.filterForm.patchValue({ modelId: '' });
+    this.models.set([]);
+
+    if (selectedMakeId) {
+      this.carService.getModelsByMake(Number(selectedMakeId)).subscribe(res => {
+        this.models.set(res);
+      });
+    }
+  }
+
+  applyFilters() {
+    this.loading.set(true);
+    const raw = this.filterForm.getRawValue();
+    
+    // Clean data before sending
+    const filters: any = { ...raw };
+    if(filters.makeId) filters.makeId = Number(filters.makeId);
+    if(filters.modelId) filters.modelId = Number(filters.modelId);
+    
+    this.carService.getCars(filters).subscribe({
+      next: (data) => {
+        this.cars.set(data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  resetFilters() {
+    this.filterForm.reset();
+    this.models.set([]);
+    this.applyFilters();
+  }
 }

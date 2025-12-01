@@ -1,73 +1,46 @@
-export interface IMake {
-    id: number;
-    name: string;
+export interface ILookup {
+  id: number;
+  name: string;
 }
 
-export interface IModel {
-    id: number;
-    name: string;
-    makeId: string;
-}
-
-
-export interface IBodyType {
-    id: number;
-    name: string;
-}
-
-
-export interface IFuelType {
-    id: number;
-    name: string;
-}
-
-
-export interface ILocationCity {
-    id: number;
-    name: string;
-}
-
-
-
-export interface ICarImage {
-    id: number;
-    name: string;
-    isMain: boolean;
-    carId: string;
-}
-
+export interface IMake { makeId: number; makeName: string; }
+export interface IModel { modelId: number; modelName: string; }
+export interface IBodyType { bodyTypeId: number; name: string; }
+export interface IFuelType { fuelId: number; name: string; }
+export interface ILocation { locId: number; name: string; }
 
 export interface ICar {
-  carId: string; 
-  title: string;
+  carId: string;
   year: number;
   price: number;
-  description?: string; 
-  createdDate: string;  
-  makeId: number;
-  modelId: number;
-  bodyTypeId: number;
-  fuelId: number;
-  locId: number;
-  adminId?: string;
-  buyerId?: string; 
+  description: string;
+  createdDate: string;
+  imageUrls: string[]; 
 
-  make?: IMake;
-  model?: IModel;
-  bodyType?: IBodyType;
-  fuelType?: IFuelType;
-  locationCity?: ILocationCity;
-  carImages?: ICarImage[];
+  makeId: number;
+  make: IMake;
   
+  modelId: number;
+  model: IModel;
+  
+  bodyTypeId: number;
+  bodyType: IBodyType;
+  
+  fuelId: number;
+  fuelType: IFuelType;
+  
+  locId: number;
+  locationCity: ILocation;
 }
 
-export interface ICarFilters {
-    makeId?: number;
-    modelId?: number;
-    year?: number;
-    minPrice?: number;
-    maxPrice?: number;    
-    bodyTypeId?: number;
-    fuelId?: number;
-    locId?: number;
+export interface CarFilter {
+  search?: string;
+  makeId?: number;
+  modelId?: number;
+  bodyTypeId?: number;
+  fuelId?: number;
+  locId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  year?: number;
 }

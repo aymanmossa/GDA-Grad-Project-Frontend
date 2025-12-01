@@ -1,30 +1,63 @@
-// Variables needed for this component
-$primary: #3a86ff;
-$secondary: #8338ec;
+$primary: #003486;
+$secondary: #482f6b;
 $white: #ffffff;
+$light-bg: #f5f7fa;
 
+// Hero Section
 .hero-section {
     background: linear-gradient(135deg, $primary, $secondary);
     color: $white;
-    padding: 100px 0;
+    padding: 80px 0;
     position: relative;
-    overflow: hidden;
+}
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTIwMCA4MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTIwMCAwSDB2ODAwaDEyMDBWMHoiIGZpbGw9IiMwMDAiIG9wYWNpdHk9Ii4wMiIvPjxwYXRoIGQ9Ik0xMjAwIDQwMEgwdjQwMGgxMjAwVjQwMHoiIGZpbGw9IiMwMDAiIG9wYWNpdHk9Ii4wMyIvPjxwYXRoIGQ9Ik0xMjAwIDY2N0gwdjEzM2gxMjAwVjY2N3oiIGZpbGw9IiMwMDAiIG9wYWNpdHk9Ii4wNCIvPjwvZz48L3N2Zz4=');
-        opacity: 0.1;
+.hero-img-container {
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+// Main Content
+.main-content {
+    background-color: $light-bg;
+    min-height: 100vh;
+}
+
+// Sidebar
+.filter-sidebar {
+    position: sticky;
+    top: 20px; // Stick to top while scrolling
+}
+
+// Cards
+.car-card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
 }
 
-// Responsive
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 60px 0;
+// Form Controls Override (Bootstrap enhancement)
+.form-control, .form-select {
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    
+    &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 0.25rem rgba(0, 52, 134, 0.15);
+    }
+}
+
+.btn-primary {
+    background-color: $primary;
+    border-color: $primary;
+    padding: 0.6rem;
+    
+    &:hover {
+        background-color: darken($primary, 5%);
     }
 }
