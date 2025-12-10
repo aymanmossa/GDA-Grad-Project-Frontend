@@ -1,109 +1,180 @@
-<section class="hero-section">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <h1 class="display-5 fw-bold mb-3">Find Your Perfect Car</h1>
-        <p class="lead mb-4">Browse a vast selection of quality used and new cars.</p>
-      </div>
-      <div class="col-lg-6">
-        <div class="hero-img-container">
-            <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg" class="img-fluid rounded-4 shadow-lg" alt="Car">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="main-content py-5">
   <div class="container">
     <div class="row">
-      
+      <!-- Sidebar filters -->
       <div class="col-lg-3 col-md-4 mb-4">
         <div class="filter-sidebar p-4 bg-white rounded-4 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0">Filters</h5>
-                <button (click)="resetFilters()" class="btn btn-link text-decoration-none p-0">Reset</button>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold m-0">Filters</h5>
+            <button (click)="resetFilters()" class="btn btn-link text-decoration-none p-0">
+              Reset
+            </button>
+          </div>
+
+          <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="search"
+                placeholder="Search keyword..."
+              />
             </div>
 
-            <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
-                
-                <div class="mb-3">
-                    <input type="text" class="form-control" formControlName="search" placeholder="Search keyword...">
-                </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Brand</label>
+              <select
+                class="form-select"
+                formControlName="makeId"
+                (change)="onMakeChange()"
+              >
+                <option value="">All Brands</option>
+                @for (m of makes(); track m.makeId) {
+                  <option [value]="m.makeId">
+                    {{ m.makeName }}
+                  </option>
+                }
+              </select>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Brand</label>
-                    <select class="form-select" formControlName="makeId" (change)="onMakeChange()">
-                        <option value="">All Brands</option>
-                        <option *ngFor="let m of makes()" [value]="m.makeId">{{ m.makeName }}</option>
-                    </select>
-                </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Model</label>
+              <select
+                class="form-select"
+                formControlName="modelId"
+                [disabled]="models().length === 0"
+              >
+                <option value="">All Models</option>
+                @for (mod of models(); track mod.modelId) {
+                  <option [value]="mod.modelId">
+                    {{ mod.modelName }}
+                  </option>
+                }
+              </select>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Model</label>
-                    <select class="form-select" formControlName="modelId" [disabled]="models().length === 0">
-                        <option value="">All Models</option>
-                        <option *ngFor="let mod of models()" [value]="mod.modelId">{{ mod.modelName }}</option>
-                    </select>
-                </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Fuel Type</label>
+              <select class="form-select" formControlName="fuelId">
+                <option value="">All Fuel Types</option>
+                @for (fuel of fuelTypes(); track fuel.fuelId) {
+                  <option [value]="fuel.fuelId">
+                    {{ fuel.name }}
+                  </option>
+                }
+              </select>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Location</label>
-                    <select class="form-select" formControlName="locId">
-                        <option value="">All Cities</option>
-                        <option *ngFor="let loc of locations()" [value]="loc.locId">{{ loc.name }}</option>
-                    </select>
-                </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Body Type</label>
+              <select class="form-select" formControlName="bodyTypeId">
+                <option value="">All Body Types</option>
+                @for (bodyType of bodyTypes(); track bodyType.bodyTypeId) {
+                  <option [value]="bodyType.bodyTypeId">
+                    {{ bodyType.name }}
+                  </option>
+                }
+              </select>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Price (EGP)</label>
-                    <div class="d-flex gap-2">
-                        <input type="number" class="form-control" formControlName="minPrice" placeholder="Min">
-                        <input type="number" class="form-control" formControlName="maxPrice" placeholder="Max">
-                    </div>
-                </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Location</label>
+              <select class="form-select" formControlName="locId">
+                <option value="">All Cities</option>
+                @for (loc of locations(); track loc.locId) {
+                  <option [value]="loc.locId">
+                    {{ loc.name }}
+                  </option>
+                }
+              </select>
+            </div>
 
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Show Results</button>
-            </form>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Price (EGP)</label>
+              <div class="d-flex gap-2">
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="minPrice"
+                  placeholder="Min"
+                />
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="maxPrice"
+                  placeholder="Max"
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold">
+              Show Results
+            </button>
+          </form>
         </div>
       </div>
 
+      <!-- Cars list -->
       <div class="col-lg-9 col-md-8">
-        
-        <div *ngIf="loading()" class="text-center py-5">
+        @if (loading()) {
+          <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status"></div>
             <p class="mt-2 text-muted">Loading cars...</p>
-        </div>
-
-        <div *ngIf="!loading()" class="row g-4">
-            
-            <div class="col-md-6 col-xl-4" *ngFor="let car of cars()">
-                <div class="card h-100 border-0 shadow-sm rounded-4 car-card-hover">
-                    <img [src]="car.imageUrls?.[0] || 'assets/placeholder.jpg'" class="card-img-top" alt="Car" style="height: 200px; object-fit: cover;">
-                    
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">
-                            {{ car.make?.makeName }} {{ car.model?.modelName }}
-                        </h5>
-                        <p class="card-text text-muted mb-2">
-                            {{ car.year }} • {{ car.locationCity?.name }}
-                        </p>
-                        <h6 class="text-primary fw-bold mb-3">
-                            {{ car.price | currency:'EGP ' }}
-                        </h6>
-                        <button class="btn btn-outline-primary w-100 rounded-pill">View Details</button>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="cars().length === 0" class="text-center py-5">
+          </div>
+        } @else {
+          <div class="row g-4">
+            @if (cars().length === 0) {
+              <div class="text-center py-5">
                 <h4>No cars found</h4>
                 <p class="text-muted">Try adjusting your filters</p>
-            </div>
+              </div>
+            } @else {
+              @for (car of cars(); track car.carId) {
+                <div class="col-md-6 col-xl-4">
+                  <div class="card h-100 border-0 shadow-sm rounded-4 car-card-hover">
+                    <img
+                      [src]="car.imageUrls[0] ? 'https://carnest.runasp.net/' + car.imageUrls[0] : 'assets/placeholder.jpg'"
+                      class="card-img-top"
+                      alt="Car"
+                      style="height: 200px; object-fit: cover;"
+                    />
 
+                    <div class="card-body">
+                      <h5 class="card-title fw-bold">
+                        {{ car.year }} {{ car.makeName }} {{ car.modelName }}
+                      </h5>
+                      <p class="card-text text-muted mb-2">
+                        {{ car.year }} • {{ car.locationName }}
+                      </p>
+                      <h6 class="text-primary fw-bold mb-3">
+                        {{ car.price | currency:'EGP ' }}
+                      </h6>
+                      <button
+                        class="btn btn-outline-primary w-100 rounded-pill"
+                        [routerLink]="['/cars', car.carId]"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+        
+      </div>
+      <div class="col-lg-9 col-md-8">
+        <div class="pagination">
+          <button (click)="loadPage(pageNumber() - 1)" [disabled]="!canGoPrevious()">
+            <i class="fa-duotone fa-solid fa-angle-left"></i> Prev
+          </button>
+          <span>{{ pageNumber() }} of {{ totalPages() }}</span>
+          <button (click)="loadPage(pageNumber() + 1)" [disabled]="!canGoNext()">
+            Next <i class="fa-duotone fa-solid fa-angle-right"></i>
+          </button>
         </div>
       </div>
-
     </div>
   </div>
 </section>

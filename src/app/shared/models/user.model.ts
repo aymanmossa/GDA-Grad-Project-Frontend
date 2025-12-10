@@ -5,9 +5,10 @@ export interface IUser{
     email: string;
     nationalId: string;
     address: string;
-    createdAt: Date;
+    createdDate: string; 
     role: 'Admin' | 'Vendor' | "Customer";
     token: string;
+    phoneNumber?: string;
 }
 
 export interface IRegisterRequest{

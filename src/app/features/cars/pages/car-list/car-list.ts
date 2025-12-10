@@ -1,14 +1,22 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CarService } from '../../../../core/services/car.service';
-import { ICar, IMake, IModel, IBodyType, IFuelType, ILocation } from '../../../../shared/models/car.model';
+import {
+  ICar,
+  IMake,
+  IModel,
+  IBodyType,
+  IFuelType,
+  ILocation
+} from '../../../../shared/models/car.model';
 
 @Component({
   selector: 'app-car-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe],
-  templateUrl: './car-list.html', 
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe, RouterLink],
+  templateUrl: './car-list.html',
   styleUrl: './car-list.scss'
 })
 export class CarListComponent implements OnInit {
@@ -22,7 +30,14 @@ export class CarListComponent implements OnInit {
   bodyTypes = signal<IBodyType[]>([]);
   fuelTypes = signal<IFuelType[]>([]);
   locations = signal<ILocation[]>([]);
+  priceRange = signal<{ min: number; max: number }>({ min: 1000, max: 20000000 });
   loading = signal<boolean>(false);
+
+  // pagination state
+  pageNumber = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalPages = signal<number>(1);
+  totalRecords = signal<number>(0);
 
   // --- Filter Form ---
   filterForm = this.fb.group({
@@ -39,7 +54,7 @@ export class CarListComponent implements OnInit {
 
   ngOnInit() {
     this.loadLookups();
-    this.applyFilters(); 
+    this.loadPage(1);
   }
 
   loadLookups() {
@@ -47,6 +62,38 @@ export class CarListComponent implements OnInit {
     this.carService.getBodyTypes().subscribe(res => this.bodyTypes.set(res));
     this.carService.getFuelTypes().subscribe(res => this.fuelTypes.set(res));
     this.carService.getLocations().subscribe(res => this.locations.set(res));
+  }
+
+
+  loadPage(page: number) {
+    if (page > 1) return;
+    this.loading.set(true);
+
+    const raw = this.filterForm.getRawValue();
+    const filters: any = { ...raw };
+
+    if (filters.makeId) filters.makeId = Number(filters.makeId);
+    if (filters.modelId) filters.modelId = Number(filters.modelId);
+    if (filters.fuelId) filters.fuelId = Number(filters.fuelId);
+    if (filters.bodyTypeId) filters.bodyTypeId = Number(filters.bodyTypeId);
+    if (filters.locId) filters.locId = Number(filters.locId);
+    if (filters.minPrice) filters.minPrice = Number(filters.minPrice);
+    if (filters.maxPrice) filters.maxPrice = Number(filters.maxPrice);
+    if (filters.year) filters.year = Number(filters.year);
+
+    this.carService.getCars(filters, page, this.pageSize()).subscribe({
+      next: res => {
+        this.cars.set(res.data);
+        this.pageNumber.set(res.pageNumber);
+        this.totalPages.set(res.totalPages);
+        this.totalRecords.set(res.totalRecords);
+        this.loading.set(false);
+      },
+      error: err => {
+        console.log(err);
+        this.loading.set(false);
+      }
+    });
   }
 
   onMakeChange() {
@@ -61,30 +108,25 @@ export class CarListComponent implements OnInit {
     }
   }
 
+
   applyFilters() {
-    this.loading.set(true);
-    const raw = this.filterForm.getRawValue();
-    
-    // Clean data before sending
-    const filters: any = { ...raw };
-    if(filters.makeId) filters.makeId = Number(filters.makeId);
-    if(filters.modelId) filters.modelId = Number(filters.modelId);
-    
-    this.carService.getCars(filters).subscribe({
-      next: (data) => {
-        this.cars.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading.set(false);
-      }
-    });
+    this.pageNumber.set(1);
+    this.loadPage(1);
   }
+
 
   resetFilters() {
     this.filterForm.reset();
     this.models.set([]);
     this.applyFilters();
   }
+  
+  canGoPrevious(): boolean {
+    return this.pageNumber() > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.pageNumber() < this.totalPages();
+  }
+
 }

@@ -1,3 +1,5 @@
+import { IUser } from "./user.model";
+
 export interface ILookup {
   id: number;
   name: string;
@@ -15,32 +17,54 @@ export interface ICar {
   price: number;
   description: string;
   createdDate: string;
-  imageUrls: string[]; 
+  imageUrls: string[];
 
   makeId: number;
-  make: IMake;
-  
+  makeName: string;
+
   modelId: number;
-  model: IModel;
-  
+  modelName: string;
+
   bodyTypeId: number;
-  bodyType: IBodyType;
-  
+  bodyTypeName: string;
+
   fuelId: number;
-  fuelType: IFuelType;
-  
+  fuelName: string;
+
   locId: number;
-  locationCity: ILocation;
+  locationName: string;
+
+  publisherName: string;
+  publisherPhone: string;
+  publisherEmail: string;
+
 }
 
 export interface CarFilter {
   search?: string;
+
   makeId?: number;
   modelId?: number;
   bodyTypeId?: number;
   fuelId?: number;
   locId?: number;
+
+  makeName?: string;
+  modelName?: string;
+  bodyTypeName?: string;
+  fuelTypeName?: string;
+  locationName?: string;
+
   minPrice?: number;
   maxPrice?: number;
   year?: number;
+}
+
+
+export interface IPagedResponse<T> {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalRecords: number;
+  data: T[];
 }

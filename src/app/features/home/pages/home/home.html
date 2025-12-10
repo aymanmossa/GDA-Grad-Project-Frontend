@@ -1,0 +1,70 @@
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold mb-3">Find Your Perfect Car</h1>
+                <p class="lead mb-4">Browse a vast selection of quality used and new cars.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-img-container">
+                    <img src="https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg"
+                        class="img-fluid rounded-4 shadow-lg" alt="Car">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- New Cars -->
+        <div class="col-md-4">
+            <div class="card shadow-sm home-card">
+                <img src="https://www.motorbeam.com/wp-content/uploads/2024-Kia-Carnival-Specs.jpg" class="card-img-top" alt="New cars">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">New cars</h5>
+                    <p class="card-text flex-grow-1">
+                        Browse the latest new cars available on the market.
+                    </p>
+                    <a class="btn btn-reveal" [routerLink]="['/cars']" [queryParams]="{ type: 'new' }">
+                        Explore new cars
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Used Cars -->
+        <div class="col-md-4">
+            <div class="card shadow-sm home-card">
+                <img src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/newscms/2019_42/3052526/191015-used-car-mn-0920.jpg" class="card-img-top" alt="Used cars">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Used cars</h5>
+                    <p class="card-text flex-grow-1">
+                        Find great deals on used cars from trusted sellers.
+                    </p>
+                    <a class="btn btn-reveal" [routerLink]="['/cars']" [queryParams]="{ type: 'used' }">
+                        Browse used cars
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sell Your Car -->
+        <div class="col-md-4">
+            <div class="card shadow-sm home-card">
+                <img src="https://www.experian.com/blogs/ask-experian/wp-content/uploads/Closeup-Photo-Of-Two-Hands-Exchanging-Car-Keys-And-Cash.jpg.webp" class="card-img-top" alt="Sell your car">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Sell your car</h5>
+                    <p class="card-text flex-grow-1">
+                        List your car and reach thousands of potential buyers.
+                    </p>
+                    <a class="btn btn-reveal mt-2" [routerLink]="['/cars/sell']">
+                        Start selling
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

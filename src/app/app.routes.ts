@@ -1,46 +1,41 @@
 import { Routes } from '@angular/router';
 import { CarListComponent } from './features/cars/pages/car-list/car-list';
-import { authGuardGuard } from './core/guards/auth.guard-guard';
+import { HomeComponent } from './features/home/pages/home/home';
+import { CarDetailsComponent } from './features/cars/pages/car-details/car-details';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'cars',
+        component: HomeComponent,
         pathMatch: 'full'
     },
     {
-        path: 'cars',
-        component: CarListComponent,
+        path: 'home',
+        component: HomeComponent
     },
     {
-        path: '**',
-        redirectTo: 'cars',
+        path: 'cars',
+        component: CarListComponent
+    },
+    
+    {
+        path: 'cars/:id',
+        component: CarDetailsComponent
+        
     },
 
-    // Auth Routes
-    
-    //// any role 
-    // {
-    //     path: 'profile',
-    //     component: ProfileComponent,
-    //     canActivate: [authGuardGuard]
-    // },
 
-    //// vendor role
-    // {
-    //     path: 'vendor/dashboard',
-    //     component: VendorDashboardComponent,
-    //     canActivate: [authGuardGuard],
-    //     data: {role: ['Vendor']}
-    // }
+    //   {
+    //     path: 'cars/:id',
+    //     // component: CarDetailComponent,
+    //   },
+    //   {
+    //     path: 'cars/sell',
+    //     // component: CarSellComponent,
+    //   },
 
-    //// admin role
-    // {
-    //     path: 'admin/dashboard',
-    //     component: AdminDashboardComponent,
-    //     canActivate: [authGuardGuard],
-    //     data: {role: ['Admin']}
-    // }
-
-
+    {
+        path: '**',
+        redirectTo: ''
+    }
 ];

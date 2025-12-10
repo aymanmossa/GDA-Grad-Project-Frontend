@@ -1,0 +1,157 @@
+@if (!loading()) {
+@if (car(); as c) {
+<div class="container py-5">
+  <div class="row gy-4">
+    <!-- Images -->
+    <div class="col-lg-7">
+      <div class="main-image mb-3">
+        <img [src]="c.imageUrls?.[0] ? 'https://carnest.runasp.net/' + c.imageUrls[0] : 'assets/placeholder.jpg'"
+          class="img-fluid rounded-4 shadow-sm w-100" alt="Car image" />
+      </div>
+
+      @if (c.imageUrls?.length) {
+      <div class="d-flex flex-wrap gap-2">
+        @for (img of c.imageUrls; track $index) {
+        <img [src]="'https://carnest.runasp.net/' + img" class="img-thumbnail thumb-img" alt="Car image" />
+        }
+      </div>
+      }
+
+      <div class="card car-summary-card border-0 mt-3 shadow-sm rounded-4 mb-3">
+        <div class="card-body">
+          <!-- Title + price + meta -->
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+              <h3 class="car-title fw-bold mb-1">
+                {{ c.makeName }} {{ c.modelName }} {{ c.year }}
+              </h3>
+
+              <div class="car-subtitle text-muted small d-flex flex-wrap align-items-center gap-2">
+                <span>
+                  <i class="fa-solid fa-calendar-days me-1"></i>
+                  {{ c.createdDate | date:'mediumDate' }}
+                </span>
+                <span class="bullet-separator">•</span>
+                <span>
+                  <i class="fa-solid fa-location-dot me-1"></i>
+                  {{ c.locationName }}
+                </span>
+              </div>
+            </div>
+
+            <div class="text-md-end">
+              <div class="car-price text-primary fw-bold mb-1">
+                {{ c.price | currency:'EGP ' }}
+              </div>
+              <span class="badge bg-light border text-primary small">
+                <i class="fa-solid fa-tag me-1"></i> For sale
+              </span>
+            </div>
+          </div>
+
+          <!-- Meta with icons -->
+          <div class="d-flex flex-wrap gap-3 car-meta">
+            <div class="car-meta-item">
+              <i class="fa-solid fa-car-side car-meta-icon"></i>
+              <div>
+                <div class="car-meta-label">Body</div>
+                <div class="car-meta-value">{{ c.bodyTypeName }}</div>
+              </div>
+            </div>
+
+            <div class="car-meta-item">
+              <i class="fa-solid fa-gas-pump car-meta-icon"></i>
+              <div>
+                <div class="car-meta-label">Fuel</div>
+                <div class="car-meta-value">{{ c.fuelName }}</div>
+              </div>
+            </div>
+
+            <div class="car-meta-item">
+              <i class="fa-regular fa-calendar car-meta-icon"></i>
+              <div>
+                <div class="car-meta-label">Year</div>
+                <div class="car-meta-value">{{ c.year }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Main info + seller -->
+    <div class="col-lg-5">
+      <!-- Seller info -->
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 pb-0">
+          <h6 class="fw-bold mb-2">Seller information</h6>
+        </div>
+        <div class="card-body pt-2">
+          <p class="mb-1">
+            <strong>{{ c.publisherName }}</strong>
+          </p>
+
+          @if (c.publisherPhone) {
+          <p class="mb-1">
+            Phone:
+            <a [href]="'tel:' + c.publisherPhone">
+              {{ c.publisherPhone }}
+            </a>
+          </p>
+          }
+
+          @if (c.publisherEmail) {
+          <p class="mb-1">
+            Email:
+            <a [href]="'mailto:' + c.publisherEmail">
+              {{ c.publisherEmail }}
+            </a>
+          </p>
+          }
+
+          <p class="text-muted mb-0">
+            You can contact the seller using the phone or email above.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <a routerLink="/cars" class="btn btn-outline-secondary btn-sm">
+          ← Back to cars list
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3">Description</h5>
+          <p class="mb-0">
+            {{ c.description || 'No description provided.' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+} @else {
+<div class="container py-5">
+  @if (error()) {
+  <div class="alert alert-danger">
+    {{ error() }}
+  </div>
+  } @else {
+  <p class="text-muted">Car not found.</p>
+  }
+</div>
+}
+} @else {
+<div class="container py-5 text-center">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2 text-muted">Loading car details...</p>
+</div>
+}

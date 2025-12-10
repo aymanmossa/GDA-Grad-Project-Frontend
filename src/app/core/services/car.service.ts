@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ICar, CarFilter, IMake, IModel, IBodyType, IFuelType, ILocation } from '../../shared/models/car.model';
+import { map, Observable } from 'rxjs';
+import { ICar, CarFilter, IMake, IModel, IBodyType, IFuelType, ILocation, IPagedResponse } from '../../shared/models/car.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +9,12 @@ import { ICar, CarFilter, IMake, IModel, IBodyType, IFuelType, ILocation } from 
 export class CarService {
   private http = inject(HttpClient);
   private apiUrl = 'https://carnest.runasp.net/api/Car';
+  private baseUrl = 'https://carnest.runasp.net/api';
 
-  getCars(filters: CarFilter): Observable<ICar[]> {
-    let params = new HttpParams();
+  getCars(filters: CarFilter, pageNumber = 1, pageSize = 9): Observable<IPagedResponse<ICar>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
 
     // Dropdowns for Ids
     if (filters.makeId) params = params.set('makeId', filters.makeId);
@@ -25,35 +28,36 @@ export class CarService {
     if (filters.maxPrice) params = params.set('maxPrice', filters.maxPrice);
     if (filters.year) params = params.set('year', filters.year);
 
-    return this.http.get<ICar[]>(`${this.apiUrl}/cars`, { params });
+    return this.http.get<IPagedResponse<ICar>>(`${this.baseUrl}/Car`, { params });
+
+
   }
-  // Single Car details
   getCarById(id: string): Observable<ICar> {
-    return this.http.get<ICar>(`${this.apiUrl}/cars/${id}`);
+    return this.http.get<ICar>(`${this.baseUrl}/Car/${id}`);
   }
 
-  // Dropdowns
-  getMakes() {
-    return this.http.get<IMake[]>(`${this.apiUrl}/makes`);
+
+  getMakes(): Observable<IMake[]> {
+    return this.http.get<IMake[]>(`${this.baseUrl}/Make`);
   }
 
-  // Fetch models based on the selected Make
-  getModelsByMake(makeId: number) {
-    return this.http.get<IModel[]>(`${this.apiUrl}/models?makeId=${makeId}`);
+  getModelsByMake(makeId: number): Observable<IModel[]> {
+    return this.http.get<IModel[]>(`${this.baseUrl}/Model`, {
+      params: new HttpParams().set('makeId', makeId),
+    });
   }
 
-  getBodyTypes() {
-    return this.http.get<IBodyType[]>(`${this.apiUrl}/bodytypes`);
+  getBodyTypes(): Observable<IBodyType[]> {
+    return this.http.get<IBodyType[]>(`${this.baseUrl}/BodyType`);
   }
 
-  getFuelTypes() {
-    return this.http.get<IFuelType[]>(`${this.apiUrl}/fueltypes`);
+  getFuelTypes(): Observable<IFuelType[]> {
+    return this.http.get<IFuelType[]>(`${this.baseUrl}/FuelType`);
   }
 
-  getLocations() {
-    return this.http.get<ILocation[]>(`${this.apiUrl}/locations`);
+  getLocations(): Observable<ILocation[]> {
+    return this.http.get<ILocation[]>(`${this.baseUrl}/LocationCity`);
   }
-
 
   // admin and vendor CRUD
   createCar(car: Partial<ICar>): Observable<ICar> {

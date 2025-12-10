@@ -1,43 +1,7 @@
 // Color variables
-$primary: #3a86ff;
-$secondary: #8338ec;
-$success: #06d6a0;
-$warning: #ffd166;
-$danger: #ef476f;
-$dark: #1a1a2e;
-$light: #f8f9fa;
-$gray: #6c757d;
+@use "../variables" as *;
+@forward "../variables";
 
-$white: #ffffff;
-$body-color: #333333;
-$body-bg: #f5f7fa;
-
-// Typography
-$font-family-base: 'Roboto', sans-serif;
-$font-family-heading: 'Montserrat', sans-serif;
-
-// Radii
-$border-radius-lg: 12px;
-$border-radius-pill: 30px;
-
-// Shadows
-$box-shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.05);
-$box-shadow-soft-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-
-// Buttons
-$btn-padding-y: 10px;
-$btn-padding-x: 25px;
-
-// Transitions
-$transition-fast: 0.3s ease;
-
-
-// Global styles
-body {
-    font-family: $font-family-base;
-    color: $body-color;
-    background-color: $body-bg;
-}
 
 h1,
 h2,
@@ -56,7 +20,11 @@ h6 {
     color: $primary !important;
 }
 
-
+.app-logo {
+    width: 90px;
+    height: 60px;
+    object-fit: contain;
+}
 
 
 

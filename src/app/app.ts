@@ -8,8 +8,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('web');
+export class AppComponent {
+  title = signal('web');
 
   showLoginModal() {
     console.log('Login modal triggered');
