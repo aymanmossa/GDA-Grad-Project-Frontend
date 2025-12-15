@@ -49,9 +49,7 @@ export class CarService {
   }
 
   getModelsByMake(makeId: number): Observable<IModel[]> {
-    return this.http.get<IModel[]>(`${this.baseUrl}/Model`, {
-      params: new HttpParams().set('makeId', makeId),
-    });
+    return this.http.get<IModel[]>(`${this.baseUrl}/Model/by-make/${makeId}`);
   }
 
   getBodyTypes(): Observable<IBodyType[]> {

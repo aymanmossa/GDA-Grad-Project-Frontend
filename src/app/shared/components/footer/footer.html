@@ -4,11 +4,16 @@
       <!-- About -->
       <div>
         <h3 class="text-lg font-bold mb-4 flex items-center">
+          @if (isDarkMode) {
           <img src="/logo.png" alt="Car Rental Logo" class="h-8 w-8 mr-2 object-contain" />
-          Car Rental
+          } @else {
+          <img src="/logo-light.png" alt="Car Rental Logo" class="h-8 w-8 mr-2 object-contain" />
+          }
+          Grand Drive Auto
         </h3>
         <p class="text-gray-400 dark:text-gray-500 text-sm">
-          Find your perfect car from a wide selection of quality vehicles. Browse new and used cars from trusted sellers.
+          Find your perfect car from a wide selection of quality vehicles. Browse new and used cars from trusted
+          sellers.
         </p>
       </div>
 
@@ -17,22 +22,26 @@
         <h4 class="text-md font-semibold mb-4">Quick Links</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a routerLink="/" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a routerLink="/"
+              class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               Home
             </a>
           </li>
           <li>
-            <a routerLink="/cars" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a routerLink="/cars"
+              class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               Browse Cars
             </a>
           </li>
           <li>
-            <a routerLink="/register-customer" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a routerLink="/register-customer"
+              class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               Register
             </a>
           </li>
           <li>
-            <a routerLink="/login" class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
+            <a routerLink="/login"
+              class="text-gray-400 dark:text-gray-500 hover:text-white dark:hover:text-gray-300 transition-colors">
               Login
             </a>
           </li>
@@ -71,9 +80,9 @@
     </div>
 
     <!-- Copyright -->
-    <div class="border-t border-gray-800 dark:border-gray-900 mt-8 pt-6 text-center text-sm text-gray-400 dark:text-gray-600">
+    <div
+      class="border-t border-gray-800 dark:border-gray-900 mt-8 pt-6 text-center text-sm text-gray-400 dark:text-gray-600">
       <p>&copy; {{ currentYear }} Car Rental. All rights reserved.</p>
     </div>
   </div>
 </footer>
-

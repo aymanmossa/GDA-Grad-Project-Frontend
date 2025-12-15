@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CarService } from '../../../../core/services/car.service';
 import {
   ICar,
@@ -24,6 +24,7 @@ import {
 export class CarListComponent implements OnInit {
   private carService = inject(CarService);
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
 
   // Expose enums
   CarCondition = CarCondition;
@@ -56,13 +57,25 @@ export class CarListComponent implements OnInit {
     minPrice: [''],
     maxPrice: [''],
     year: [''],
-    condition: [null],
-    gearType: [null]
+    condition: [null as CarCondition | null],
+    gearType: [null as CarGearType | null]
   });
 
   ngOnInit() {
     this.loadLookup();
-    this.loadPage(1);
+
+    // Read query params for initial filter
+    this.route.queryParams.subscribe(params => {
+      if (params['type']) {
+        const type = params['type'].toLowerCase();
+        if (type === 'new') {
+          this.filterForm.patchValue({ condition: CarCondition.New });
+        } else if (type === 'used') {
+          this.filterForm.patchValue({ condition: CarCondition.Used });
+        }
+      }
+      this.loadPage(1);
+    });
   }
 
   loadLookup() {
@@ -168,7 +181,7 @@ export class CarListComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     const value = Number(target.value);
     const maxPrice = this.getMaxPrice();
-    
+
     // Ensure min doesn't exceed max
     if (value > maxPrice) {
       this.filterForm.patchValue({ minPrice: maxPrice.toString() });
@@ -181,7 +194,7 @@ export class CarListComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     const value = Number(target.value);
     const minPrice = this.getMinPrice();
-    
+
     // Ensure max doesn't go below min
     if (value < minPrice) {
       this.filterForm.patchValue({ maxPrice: minPrice.toString() });
