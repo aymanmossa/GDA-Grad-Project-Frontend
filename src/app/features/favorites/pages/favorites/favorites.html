@@ -1,0 +1,97 @@
+<section class="py-8 px-4 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div class="container mx-auto">
+        <!-- Header -->
+        <div class="mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                <i class="fa-solid fa-heart text-red-500 mr-3"></i>
+                My Favorites
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">Cars you've saved for later</p>
+        </div>
+
+        @if (loading()) {
+        <div class="text-center py-12">
+            <div
+                class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400">
+            </div>
+            <p class="mt-4 text-gray-700 dark:text-gray-300 font-medium">Loading your favorites...</p>
+        </div>
+        } @else {
+        @if (favorites.length === 0) {
+        <div
+            class="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+            <i class="fa-regular fa-heart text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
+            <h4 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-white">No favorites yet</h4>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Start browsing cars and add them to your favorites!</p>
+            <a routerLink="/cars"
+                class="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-full transition-all transform hover:scale-105 shadow-md hover:shadow-lg">
+                <i class="fa-solid fa-car mr-2"></i>
+                Browse Cars
+            </a>
+        </div>
+        } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @for (car of favorites; track car.carId) {
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-gray-900/50 overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900 transition-all transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700">
+                <div class="relative">
+                    <img [src]="car.imageUrls && car.imageUrls[0] ? 'https://carnest.runasp.net/' + car.imageUrls[0] : 'assets/placeholder.jpg'"
+                        class="w-full h-40 object-cover" alt="Car" />
+
+                    <!-- Condition Badge -->
+                    <div class="absolute top-2 right-2">
+                        @if (car.condition === CarCondition.New) {
+                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            <i class="fa-solid fa-sparkles mr-1"></i>New
+                        </span>
+                        } @else {
+                        <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                            <i class="fa-solid fa-tag mr-1"></i>Used
+                        </span>
+                        }
+                    </div>
+
+                    <!-- Remove from Favorites Button -->
+                    <button type="button" (click)="removeFromFavorites(car.carId, $event)"
+                        class="absolute top-2 left-2 w-9 h-9 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors group"
+                        title="Remove from favorites">
+                        <i
+                            class="fa-solid fa-heart text-red-500 text-lg group-hover:scale-110 transition-transform"></i>
+                    </button>
+                </div>
+
+                <div class="p-4">
+                    <h5 class="font-bold text-lg mb-2 text-gray-900 dark:text-white">
+                        {{ car.year || '' }} {{ car.makeName || '' }} {{ car.modelName || '' }}
+                    </h5>
+                    <div class="flex flex-wrap gap-2 mb-3 text-sm text-gray-600 dark:text-gray-400">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-gauge-high me-1 text-blue-600 dark:text-blue-400"></i>
+                            {{ (car.mileage || 0) | number }} km
+                        </span>
+                        <span class="mx-1">•</span>
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-gears me-1 text-blue-600 dark:text-blue-400"></i>
+                            {{ car.gearType === CarGearType.Automatic ? 'Auto' : 'Manual' }}
+                        </span>
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <i class="fa-solid fa-location-dot me-1 text-blue-600 dark:text-blue-400"></i>
+                        {{ car.locationName || 'Unknown' }}
+                    </div>
+                    <h6 class="text-blue-600 dark:text-blue-400 font-bold text-xl mb-4">
+                        {{ (car.price || 0) | currency:'EGP ' }}
+                    </h6>
+                    <button type="button" (click)="viewDetails(car.carId)"
+                        class="block w-full text-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 shadow-md hover:shadow-lg cursor-pointer">
+                        <i class="fa-solid fa-eye mr-2"></i>
+                        View Details
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+        }
+    </div>
+</section>

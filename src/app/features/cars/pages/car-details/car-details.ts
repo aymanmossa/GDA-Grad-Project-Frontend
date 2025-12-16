@@ -1,9 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarService } from '../../../../core/services/car.service';
 import { ICar, CarCondition, CarGearType, DrivetrainType } from '../../../../shared/models/car.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { FavoriteService } from '../../../../core/services/favorite.service';
 
 
 @Component({
@@ -18,10 +19,12 @@ export class CarDetailsComponent implements OnInit {
   private router = inject(Router);
   private carService = inject(CarService);
   private auth = inject(AuthService);
+  private favoriteService = inject(FavoriteService);
 
   car = signal<ICar | null>(null);
   loading = signal<boolean>(true);
   deleting = signal<boolean>(false);
+  favoriting = signal<boolean>(false);
   error = signal<string | null>(null);
   selectedImageIndex = signal(0);
 
@@ -33,6 +36,34 @@ export class CarDetailsComponent implements OnInit {
   get canEdit(): boolean {
     const user = this.auth.currentUser();
     return !!user && user.role === 'Vendor';
+  }
+
+  get isCustomer(): boolean {
+    const user = this.auth.currentUser();
+    return !!user && user.role === 'Customer';
+  }
+
+  get isFavorited(): boolean {
+    const c = this.car();
+    if (!c) return false;
+    return this.favoriteService.isFavorite(c.carId);
+  }
+
+  toggleFavorite(): void {
+    const c = this.car();
+    if (!c) return;
+
+    this.favoriting.set(true);
+    this.favoriteService.toggleFavorite(c.carId).subscribe({
+      next: () => {
+        this.favoriting.set(false);
+      },
+      error: (err) => {
+        console.error('Favorite toggle error:', err);
+        this.favoriting.set(false);
+        alert('Failed to update favorites. Please try again.');
+      }
+    });
   }
 
   ngOnInit(): void {

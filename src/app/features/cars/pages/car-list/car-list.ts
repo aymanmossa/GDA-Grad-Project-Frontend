@@ -4,6 +4,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { CarService } from '../../../../core/services/car.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { FavoriteService } from '../../../../core/services/favorite.service';
 import {
   ICar,
   IMake,
@@ -27,6 +29,8 @@ export class CarListComponent implements OnInit, OnDestroy {
   private carService = inject(CarService);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  private favoriteService = inject(FavoriteService);
   private destroy$ = new Subject<void>();
 
   // Expose enums
@@ -69,9 +73,38 @@ export class CarListComponent implements OnInit, OnDestroy {
     exteriorColor: ['']
   });
 
+  get isCustomer(): boolean {
+    const user = this.authService.currentUser();
+    return !!user && user.role === 'Customer';
+  }
+
+  isFavorite(carId: string): boolean {
+    return this.favoriteService.isFavorite(carId);
+  }
+
+  toggleFavorite(carId: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.favoriteService.toggleFavorite(carId).subscribe({
+      next: () => {
+        // State is managed by FavoriteService signals
+      },
+      error: (err) => {
+        console.error('Favorite toggle error:', err);
+        alert('Failed to update favorites. Please try again.');
+      }
+    });
+  }
+
   ngOnInit() {
     this.loadLookup();
     this.setupDynamicSearch();
+
+    // Load favorites if user is a customer
+    if (this.isCustomer) {
+      this.favoriteService.loadFavorites().subscribe();
+    }
 
     // Read query params for initial filter
     this.route.queryParams.subscribe(params => {

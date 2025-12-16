@@ -45,7 +45,6 @@ export interface ICar {
 
   // Added car parameters
   exteriorColor: string;
-  internalColor: string;
   drivetrainType: DrivetrainType;
   engineCapacity: number; // in cc
   horsepower: number;

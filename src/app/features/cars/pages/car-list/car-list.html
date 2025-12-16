@@ -232,6 +232,23 @@
               <img
                 [src]="car.imageUrls[0] ? 'https://carnest.runasp.net/' + car.imageUrls[0] : 'assets/placeholder.jpg'"
                 class="w-full h-40 object-cover" alt="Car" />
+
+              <!-- Favorite Heart Button (Customers only) -->
+              @if (isCustomer) {
+              <button type="button" (click)="toggleFavorite(car.carId, $event)"
+                class="absolute top-2 left-2 w-9 h-9 flex items-center justify-center rounded-full shadow-md transition-all transform hover:scale-110 z-10"
+                [ngClass]="{
+                  'bg-red-500 hover:bg-red-600': isFavorite(car.carId),
+                  'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700': !isFavorite(car.carId)
+                }" [title]="isFavorite(car.carId) ? 'Remove from favorites' : 'Add to favorites'">
+                <i class="fa-heart text-lg" [ngClass]="{
+                    'fa-solid text-white': isFavorite(car.carId),
+                    'fa-regular text-gray-500 dark:text-gray-400': !isFavorite(car.carId)
+                  }"></i>
+              </button>
+              }
+
+              <!-- Condition Badge -->
               <div class="absolute top-2 right-2">
                 @if (car.condition === CarCondition.New) {
                 <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">

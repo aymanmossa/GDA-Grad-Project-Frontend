@@ -104,6 +104,21 @@
               class="bg-gray-100 dark:bg-gray-700 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 text-xs px-3 py-1 rounded-full font-semibold">
               <i class="fa-solid fa-tag me-1"></i> For sale
             </span>
+            @if (isCustomer) {
+            <button type="button" (click)="toggleFavorite()" [disabled]="favoriting()"
+              class="mt-2 w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+              [ngClass]="{
+                'bg-red-500 hover:bg-red-600 text-white': isFavorited,
+                'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600': !isFavorited
+              }">
+              @if (favoriting()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              } @else {
+              <i [ngClass]="{'fa-solid': isFavorited, 'fa-regular': !isFavorited}" class="fa-heart"></i>
+              }
+              {{ isFavorited ? 'Remove from Favorites' : 'Add to Favorites' }}
+            </button>
+            }
           </div>
         </div>
 
@@ -267,18 +282,11 @@
           <div class="flex items-end gap-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
             <i class="fa-solid fa-palette text-blue-600 dark:text-blue-400 text-xl mb-[-5px]"></i>
             <div>
-              <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Exterior Color</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Color</div>
               <div class="font-semibold text-gray-900 dark:text-white">{{ c.exteriorColor || 'N/A' }}</div>
             </div>
           </div>
 
-          <div class="flex items-end gap-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <i class="fa-solid fa-couch text-blue-600 dark:text-blue-400 text-xl mb-[-5px]"></i>
-            <div>
-              <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Interior Color</div>
-              <div class="font-semibold text-gray-900 dark:text-white">{{ c.internalColor || 'N/A' }}</div>
-            </div>
-          </div>
         </div>
         @if (canEdit) {
         <div class="mt-4 flex flex-wrap gap-3">

@@ -72,7 +72,6 @@ export class CarManageComponent implements OnInit {
 
       // New fields
       ExteriorColor: ['', Validators.required],
-      InternalColor: ['', Validators.required],
       DrivetrainType: [null, Validators.required],
       EngineCapacity: [null, [Validators.required, Validators.min(0)]],
       Horsepower: [null, [Validators.required, Validators.min(0)]],
@@ -112,7 +111,6 @@ export class CarManageComponent implements OnInit {
 
         // New fields
         ExteriorColor: res.exteriorColor,
-        InternalColor: res.internalColor,
         DrivetrainType: res.drivetrainType,
         EngineCapacity: res.engineCapacity,
         Horsepower: res.horsepower,
@@ -182,7 +180,6 @@ export class CarManageComponent implements OnInit {
 
     // New fields
     formData.append('ExteriorColor', value.ExteriorColor ?? '');
-    formData.append('InternalColor', value.InternalColor ?? '');
     formData.append('DrivetrainType', String(value.DrivetrainType));
     formData.append('EngineCapacity', String(value.EngineCapacity));
     formData.append('Horsepower', String(value.Horsepower));

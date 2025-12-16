@@ -9,6 +9,7 @@ import { RegisterVendorComponent } from './features/auth/pages/register-vendor/r
 import { CarManageComponent } from './features/cars/pages/car-manage/car-manage';
 import { roleGuard } from './core/guards/role-guard';
 import { guestGuard } from './core/guards/guest-guard';
+import { FavoritesComponent } from './features/favorites/pages/favorites/favorites';
 
 export const routes: Routes = [
     {
@@ -68,6 +69,12 @@ export const routes: Routes = [
         component: CarManageComponent,
         canActivate: [authGuard, roleGuard],
         data: { role: ['Vendor'] }
+    },
+
+    {
+        path: 'favorites',
+        component: FavoritesComponent,
+        canActivate: [authGuard]
     },
 
     {

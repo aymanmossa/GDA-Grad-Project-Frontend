@@ -14,7 +14,7 @@ import { ThemeService } from '../../../core/services/theme.service';
 export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
   private themeService = inject(ThemeService);
-  
+
   mobileMenuOpen = signal(false);
 
   get currentUser() {
@@ -29,12 +29,16 @@ export class NavbarComponent implements OnInit {
     return this.themeService.isDarkMode();
   }
 
+  get isCustomer() {
+    return this.isAuthenticated && this.currentUser?.role === 'Customer';
+  }
+
   ngOnInit() {
     // Toggle mobile menu
     if (typeof document !== 'undefined') {
       const button = document.getElementById('mobile-menu-button');
       const menu = document.getElementById('mobile-menu');
-      
+
       if (button && menu) {
         button.addEventListener('click', () => {
           this.mobileMenuOpen.update(val => !val);
