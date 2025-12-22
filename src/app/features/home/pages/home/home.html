@@ -95,7 +95,7 @@
         <p class="text-xl text-gray-600 dark:text-gray-400">Choose the perfect option for your needs</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 gap-8" [ngClass]="isCustomer() ? 'md:grid-cols-2' : 'md:grid-cols-3'">
         <!-- New Cars -->
         <div
             class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
@@ -156,6 +156,7 @@
         </div>
 
         <!-- Sell Your Car -->
+        @if (!isCustomer()) {
         <div
             class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
             <div class="relative h-48 overflow-hidden">
@@ -192,5 +193,6 @@
                 }
             </div>
         </div>
+        }
     </div>
 </div>

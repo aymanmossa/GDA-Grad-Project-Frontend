@@ -31,5 +31,15 @@ export interface ILoginRequest {
 
 export interface IAuthResponse {
     token: string;
+    userId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    nationalId: string;
+    address: string;
+    phoneNumber: string;
+    createdDate: string;
+    role: string;
+    expiresAt: string;
 }
 

@@ -6,7 +6,7 @@ export interface ILookup {
 }
 
 export interface IMake { makeId: number; makeName: string; }
-export interface IModel { modelId: number; modelName: string; }
+export interface IModel { modelId: number; modelName: string; makeId: number; }
 export interface IBodyType { bodyTypeId: number; name: string; }
 export interface IFuelType { fuelId: number; name: string; }
 export interface ILocation { locId: number; name: string; }

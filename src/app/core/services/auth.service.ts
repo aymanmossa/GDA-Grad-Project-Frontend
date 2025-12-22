@@ -4,7 +4,6 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, map, tap } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
 
 import {
   IUser,
@@ -25,41 +24,53 @@ export class AuthService {
   currentUser = signal<IUser | null>(null);
 
   constructor() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const user = this.mapTokenToUser(token);
-      this.currentUser.set(user);
+    // Try to restore user from localStorage
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser) as IUser;
+        this.currentUser.set(user);
+      } catch {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+      }
     }
   }
 
   registerCustomer(data: IRegisterRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/register/customer`, data).pipe(
-      map(res => this.mapTokenToUser(res.token)),
+      tap(res => console.log('Register Customer API Response:', res)),
+      map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
   }
+
   registerVendor(data: IRegisterRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/register/vendor`, data).pipe(
-      map(res => this.mapTokenToUser(res.token)),
+      tap(res => console.log('Register Vendor API Response:', res)),
+      map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
   }
 
   login(credentials: ILoginRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      map(res => this.mapTokenToUser(res.token)),
+      tap(res => console.log('Login API Response:', res)),
+      map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
 
   private handleSuccess(user: IUser) {
     localStorage.setItem('token', user.token);
+    localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUser.set(user);
   }
 
@@ -67,46 +78,19 @@ export class AuthService {
     return this.currentUser()?.token || null;
   }
 
-  private mapTokenToUser(token: string): IUser {
-    const decoded: any = jwtDecode(token);
-    console.log('Decoded Token:', decoded);
-
-    // Try multiple possible claim names for firstName
-    const firstName = 
-      decoded.firstName || 
-      decoded.given_name || 
-      decoded.givenname ||
-      decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] ||
-      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/givenname'] ||
-      '';
-
-    // Try multiple possible claim names for lastName
-    const lastName = 
-      decoded.lastName || 
-      decoded.family_name || 
-      decoded.surname ||
-      decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] ||
-      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/surname'] ||
-      '';
-
+  // Map API response directly to IUser (no JWT decoding needed)
+  private mapResponseToUser(res: IAuthResponse): IUser {
     return {
-      id:
-        decoded.userId ||
-        decoded.sub ||
-        decoded.nameid ||
-        '',
-      firstName: firstName,
-      lastName: lastName,
-      email: decoded.email || '',
-      nationalId: decoded.nationalId || '',
-      address: decoded.address || '',
-      createdDate: decoded.createdDate || decoded.createdAt || new Date().toISOString(),
-      role: (decoded.role ||
-        decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
-        'Customer') as any,
-      phoneNumber: decoded.phoneNumber,
-      token
+      id: res.userId || '',
+      firstName: res.firstName || '',
+      lastName: res.lastName || '',
+      email: res.email || '',
+      nationalId: res.nationalId || '',
+      address: res.address || '',
+      phoneNumber: res.phoneNumber || '',
+      createdDate: res.createdDate || new Date().toISOString(),
+      role: (res.role || 'Customer') as 'Admin' | 'Vendor' | 'Customer',
+      token: res.token
     };
   }
 }
-

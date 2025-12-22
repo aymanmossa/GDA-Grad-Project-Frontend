@@ -10,8 +10,16 @@ import { CarManageComponent } from './features/cars/pages/car-manage/car-manage'
 import { roleGuard } from './core/guards/role-guard';
 import { guestGuard } from './core/guards/guest-guard';
 import { FavoritesComponent } from './features/favorites/pages/favorites/favorites';
+import { AdminDashboardComponent } from './features/admin/pages/admin-dashboard/admin-dashboard';
+import { ProfileComponent } from './features/profile/pages/profile/profile';
 
 export const routes: Routes = [
+    {
+        path: 'admin',
+        component: AdminDashboardComponent,
+        canActivate: [authGuard, roleGuard],
+        data: { role: ['Admin'] }
+    },
     {
         path: '',
         component: HomeComponent,
@@ -74,6 +82,12 @@ export const routes: Routes = [
     {
         path: 'favorites',
         component: FavoritesComponent,
+        canActivate: [authGuard]
+    },
+
+    {
+        path: 'profile',
+        component: ProfileComponent,
         canActivate: [authGuard]
     },
 
