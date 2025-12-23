@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { IRegisterRequest } from '../../../../shared/models/user.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register-vendor',
@@ -18,6 +19,7 @@ export class RegisterVendorComponent {
   private router = inject(Router);
   private auth = inject(AuthService);
   private themeService = inject(ThemeService);
+  private cdr = inject(ChangeDetectorRef);
 
   get isDarkMode() {
     return this.themeService.isDarkMode();
@@ -57,6 +59,7 @@ export class RegisterVendorComponent {
   loading = false;
   error: string | null = null;
   showPassword = false;
+
   register() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
@@ -67,15 +70,31 @@ export class RegisterVendorComponent {
     this.error = null;
 
     this.auth.registerVendor(this.registerForm.value as IRegisterRequest)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
       .subscribe({
         next: (res) => {
-          this.loading = false;
           alert('Vendor registration successful');
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          this.loading = false;
           console.log('FULL ERROR:', err);
+
+          // Handle array format: [{ code: "...", description: "..." }]
+          if (Array.isArray(err.error)) {
+            const messages = err.error
+              .map((e: { code?: string; description?: string }) => e.description)
+              .filter((msg: string | undefined): msg is string => !!msg);
+            if (messages.length > 0) {
+              this.error = messages.join('\n');
+              this.cdr.detectChanges();
+              return;
+            }
+          }
 
           const errorsObj = err.error?.errors as Record<string, string[]> | undefined;
 
@@ -92,6 +111,7 @@ export class RegisterVendorComponent {
           } else {
             this.error = 'Registration failed, please check your data.';
           }
+          this.cdr.detectChanges();
         }
       });
   }

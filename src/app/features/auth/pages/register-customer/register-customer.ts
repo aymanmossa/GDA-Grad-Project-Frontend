@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -18,6 +19,7 @@ export class RegisterCustomerComponent {
   private router = inject(Router);
   private auth = inject(AuthService);
   private themeService = inject(ThemeService);
+  private cdr = inject(ChangeDetectorRef);
 
   get isDarkMode() {
     return this.themeService.isDarkMode();
@@ -68,15 +70,37 @@ export class RegisterCustomerComponent {
     this.error = null;
 
     this.auth.registerCustomer(this.registerForm.value as IRegisterRequest)
+      .pipe(
+        finalize(() => {
+          console.log('Observable finalized (completed or errored)');
+          this.loading = false;
+          this.cdr.detectChanges(); // Force UI update
+        })
+      )
       .subscribe({
         next: (res) => {
-          this.loading = false;
+          console.log('SUCCESS:', res);
           alert('Customer registration successful');
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          this.loading = false;
+          console.log('ERROR CALLBACK TRIGGERED');
           console.log('FULL ERROR:', err);
+          console.log('err.error:', err.error);
+          console.log('err.error type:', typeof err.error);
+          console.log('Is array:', Array.isArray(err.error));
+
+          // Handle array format: [{ code: "...", description: "..." }]
+          if (Array.isArray(err.error)) {
+            const messages = err.error
+              .map((e: { code?: string; description?: string }) => e.description)
+              .filter((msg: string | undefined): msg is string => !!msg);
+            if (messages.length > 0) {
+              this.error = messages.join('\n');
+              this.cdr.detectChanges(); // Force UI update
+              return;
+            }
+          }
 
           const errorsObj = err.error?.errors as Record<string, string[]> | undefined;
 
@@ -93,6 +117,7 @@ export class RegisterCustomerComponent {
           } else {
             this.error = 'Registration failed, please check your data.';
           }
+          this.cdr.detectChanges(); // Force UI update
         }
       });
   }
