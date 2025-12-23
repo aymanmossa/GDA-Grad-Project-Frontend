@@ -43,3 +43,20 @@ export interface IAuthResponse {
     expiresAt: string;
 }
 
+// Interface for profile update request
+export interface IUpdateProfileRequest {
+    firstName: string;
+    lastName: string;
+    email: string;
+    nationalId: string;
+    address: string;
+    phoneNumber: string;
+}
+
+// Interface for password change request
+export interface IChangePasswordRequest {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
+

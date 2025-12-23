@@ -9,7 +9,9 @@ import {
   IUser,
   IRegisterRequest,
   ILoginRequest,
-  IAuthResponse
+  IAuthResponse,
+  IUpdateProfileRequest,
+  IChangePasswordRequest
 } from '../../shared/models/user.model';
 
 @Injectable({
@@ -76,6 +78,36 @@ export class AuthService {
 
   get token(): string | null {
     return this.currentUser()?.token || null;
+  }
+
+  updateProfile(data: IUpdateProfileRequest): Observable<IUser> {
+    const currentUserData = this.currentUser();
+    return this.http.put<any>(`${this.apiUrl}/profile`, data).pipe(
+      tap(res => console.log('Update Profile API Response:', res)),
+      map(() => {
+        // Merge submitted data with existing user data (API may not return full user object)
+        const updatedUser: IUser = {
+          id: currentUserData?.id || '',
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          nationalId: data.nationalId,
+          address: data.address,
+          phoneNumber: data.phoneNumber,
+          createdDate: currentUserData?.createdDate || new Date().toISOString(),
+          role: currentUserData?.role || 'Customer',
+          token: currentUserData?.token || ''
+        };
+        return updatedUser;
+      }),
+      tap(user => this.handleSuccess(user))
+    );
+  }
+
+  changePassword(data: IChangePasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/change-password`, data).pipe(
+      tap(() => console.log('Password changed successfully'))
+    );
   }
 
   // Map API response directly to IUser (no JWT decoding needed)

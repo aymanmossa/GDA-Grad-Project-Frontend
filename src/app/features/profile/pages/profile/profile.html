@@ -27,6 +27,12 @@
                     <span [class]="'mt-2 px-4 py-1 rounded-full text-sm font-medium ' + getRoleBadgeClass()">
                         {{ currentUser.role }}
                     </span>
+                    <!-- Edit Profile Button -->
+                    <button (click)="openEditModal()"
+                        class="mt-4 inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors backdrop-blur-sm">
+                        <i class="fa-solid fa-pen-to-square mr-2"></i>
+                        Edit Profile
+                    </button>
                 </div>
             </div>
 
@@ -93,6 +99,12 @@
                 <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
                     <div class="flex flex-wrap gap-3">
+                        <!-- Change Password Button -->
+                        <button (click)="openPasswordModal()"
+                            class="inline-flex items-center px-4 py-2 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-colors">
+                            <i class="fa-solid fa-key mr-2"></i>
+                            Change Password
+                        </button>
                         @if (currentUser.role === 'Customer') {
                         <a routerLink="/favorites"
                             class="inline-flex items-center px-4 py-2 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors">
@@ -139,3 +151,206 @@
         }
     </div>
 </div>
+
+<!-- Edit Profile Modal -->
+@if (showEditModal()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-fade-in">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Edit Profile</h3>
+            <button (click)="closeEditModal()"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="p-6 space-y-4">
+            <!-- Success Message -->
+            @if (successMessage()) {
+            <div class="p-4 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg">
+                <i class="fa-solid fa-check-circle mr-2"></i>
+                {{ successMessage() }}
+            </div>
+            }
+
+            <!-- Error Message -->
+            @if (errorMessage()) {
+            <div class="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
+                <i class="fa-solid fa-exclamation-circle mr-2"></i>
+                {{ errorMessage() }}
+            </div>
+            }
+
+            <!-- First Name & Last Name -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
+                    <input type="text" formControlName="firstName"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    @if (profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">First name is required (min 2 characters)</p>
+                    }
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
+                    <input type="text" formControlName="lastName"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    @if (profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched) {
+                    <p class="mt-1 text-sm text-red-500">Last name is required (min 2 characters)</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                <input type="email" formControlName="email"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (profileForm.get('email')?.invalid && profileForm.get('email')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Please enter a valid email address</p>
+                }
+            </div>
+
+            <!-- National ID -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">National ID</label>
+                <input type="text" formControlName="nationalId"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (profileForm.get('nationalId')?.invalid && profileForm.get('nationalId')?.touched) {
+                <p class="mt-1 text-sm text-red-500">National ID must be 14 characters</p>
+                }
+            </div>
+
+            <!-- Address -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+                <input type="text" formControlName="address"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (profileForm.get('address')?.invalid && profileForm.get('address')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Address is required</p>
+                }
+            </div>
+
+            <!-- Phone Number -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                <input type="text" formControlName="phoneNumber" placeholder="01XXXXXXXXX"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (profileForm.get('phoneNumber')?.invalid && profileForm.get('phoneNumber')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Please enter a valid Egyptian phone number</p>
+                }
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex gap-3 pt-4">
+                <button type="button" (click)="closeEditModal()"
+                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="isLoading()"
+                    class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors flex items-center justify-center">
+                    @if (isLoading()) {
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                    Saving...
+                    } @else {
+                    <i class="fa-solid fa-save mr-2"></i>
+                    Save Changes
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}
+
+<!-- Change Password Modal -->
+@if (showPasswordModal()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Change Password</h3>
+            <button (click)="closePasswordModal()"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="p-6 space-y-4">
+            <!-- Success Message -->
+            @if (successMessage()) {
+            <div class="p-4 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg">
+                <i class="fa-solid fa-check-circle mr-2"></i>
+                {{ successMessage() }}
+            </div>
+            }
+
+            <!-- Error Message -->
+            @if (errorMessage()) {
+            <div class="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
+                <i class="fa-solid fa-exclamation-circle mr-2"></i>
+                {{ errorMessage() }}
+            </div>
+            }
+
+            <!-- Current Password -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+                <input type="password" formControlName="currentPassword"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Current password is required</p>
+                }
+            </div>
+
+            <!-- New Password -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
+                <input type="password" formControlName="newPassword"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
+                <p class="mt-1 text-sm text-red-500">New password must be at least 6 characters</p>
+                }
+            </div>
+
+            <!-- Confirm New Password -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm New
+                    Password</label>
+                <input type="password" formControlName="confirmNewPassword"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                @if (passwordForm.get('confirmNewPassword')?.hasError('passwordMismatch') &&
+                passwordForm.get('confirmNewPassword')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Passwords do not match</p>
+                } @else if (passwordForm.get('confirmNewPassword')?.invalid &&
+                passwordForm.get('confirmNewPassword')?.touched) {
+                <p class="mt-1 text-sm text-red-500">Please confirm your new password</p>
+                }
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex gap-3 pt-4">
+                <button type="button" (click)="closePasswordModal()"
+                    class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="isLoading()"
+                    class="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white rounded-lg transition-colors flex items-center justify-center">
+                    @if (isLoading()) {
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                    Changing...
+                    } @else {
+                    <i class="fa-solid fa-key mr-2"></i>
+                    Change Password
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}
