@@ -1,4 +1,5 @@
 {
+    "outputDirectory": "dist/Car-Rental-Front",
     "rewrites": [
         {
             "source": "/(.*)",
