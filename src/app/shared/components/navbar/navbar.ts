@@ -37,6 +37,10 @@ export class NavbarComponent implements OnInit {
     return this.isAuthenticated && this.currentUser?.role === 'Admin';
   }
 
+  get isVendor() {
+    return this.isAuthenticated && this.currentUser?.role === 'Vendor';
+  }
+
   ngOnInit() {
     // Toggle mobile menu
     if (typeof document !== 'undefined') {

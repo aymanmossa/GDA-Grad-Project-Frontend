@@ -21,10 +21,17 @@
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
           Home
         </a>
+        @if (isVendor) {
+        <a routerLink="/cars" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+          class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          View Your Listed Cars
+        </a>
+        } @else {
         <a routerLink="/cars" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
           Browse Cars
         </a>
+        }
         @if (isAdmin) {
         <a routerLink="/admin" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center">
@@ -120,10 +127,17 @@
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1">
           Home
         </a>
+        @if (isVendor) {
+        <a routerLink="/cars" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+          class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1">
+          View Your Listed Cars
+        </a>
+        } @else {
         <a routerLink="/cars" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1">
           Browse Cars
         </a>
+        }
         @if (isAdmin) {
         <a routerLink="/admin" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 flex items-center">

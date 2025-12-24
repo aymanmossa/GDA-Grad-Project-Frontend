@@ -95,6 +95,70 @@
         <p class="text-xl text-gray-600 dark:text-gray-400">Choose the perfect option for your needs</p>
     </div>
 
+    <!-- Vendor view: Show "View Your Listed Cars" and "Sell Your Car" -->
+    @if (isVendor()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <!-- View Your Listed Cars -->
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
+            <div class="relative h-48 overflow-hidden">
+                <img src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/newscms/2019_42/3052526/191015-used-car-mn-0920.jpg"
+                    class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                    alt="Your Listed Cars">
+                <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-list mr-1"></i> Your Listings
+                </div>
+            </div>
+            <div class="p-6 flex flex-col">
+                <div class="flex items-center mb-3">
+                    <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg mr-3">
+                        <i class="fa-solid fa-car text-blue-600 dark:text-blue-400 text-2xl"></i>
+                    </div>
+                    <h5 class="text-2xl font-bold text-gray-900 dark:text-white">View Your Listed Cars</h5>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                    View and manage your car listings, check interested buyers, and update your vehicle information.
+                </p>
+                <a class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
+                    [routerLink]="['/cars']">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    View Your Listed Cars
+                </a>
+            </div>
+        </div>
+
+        <!-- Sell Your Car -->
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
+            <div class="relative h-48 overflow-hidden">
+                <img src="https://www.experian.com/blogs/ask-experian/wp-content/uploads/Closeup-Photo-Of-Two-Hands-Exchanging-Car-Keys-And-Cash.jpg.webp"
+                    class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                    alt="Sell your car">
+                <div
+                    class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-dollar-sign mr-1"></i> Sell Now
+                </div>
+            </div>
+            <div class="p-6 flex flex-col">
+                <div class="flex items-center mb-3">
+                    <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg mr-3">
+                        <i class="fa-solid fa-hand-holding-dollar text-purple-600 dark:text-purple-400 text-2xl"></i>
+                    </div>
+                    <h5 class="text-2xl font-bold text-gray-900 dark:text-white">Sell Your Car</h5>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                    List your car and reach thousands of potential buyers. Quick and easy process.
+                </p>
+                <a class="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
+                    [routerLink]="['/car-manage/add']">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    Start selling
+                </a>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <!-- Non-vendor view: Show New Cars, Used Cars, and Sell Your Car (for guests only) -->
     <div class="grid grid-cols-1 gap-8" [ngClass]="isCustomer() ? 'md:grid-cols-2' : 'md:grid-cols-3'">
         <!-- New Cars -->
         <div
@@ -155,7 +219,7 @@
             </div>
         </div>
 
-        <!-- Sell Your Car -->
+        <!-- Sell Your Car (only for guests, not customers) -->
         @if (!isCustomer()) {
         <div
             class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
@@ -178,21 +242,14 @@
                 <p class="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
                     List your car and reach thousands of potential buyers. Quick and easy process.
                 </p>
-                @if (isVendor()) {
-                <a class="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
-                    [routerLink]="['/car-manage/add']">
-                    <i class="fa-solid fa-arrow-right mr-2"></i>
-                    Start selling
-                </a>
-                } @else {
                 <a class="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
                     [routerLink]="['/register-vendor']">
                     <i class="fa-solid fa-arrow-right mr-2"></i>
                     Start selling
                 </a>
-                }
             </div>
         </div>
         }
     </div>
+    }
 </div>
