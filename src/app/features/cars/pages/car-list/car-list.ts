@@ -165,8 +165,6 @@ export class CarListComponent implements OnInit, OnDestroy {
     if (filters.minMileage) filters.minMileage = Number(filters.minMileage);
     if (filters.maxMileage) filters.maxMileage = Number(filters.maxMileage);
 
-    console.log('Search filters:', filters);
-
     this.carService.getCars(filters, page, this.pageSize()).subscribe({
       next: res => {
         this.cars.set(res.data);
@@ -177,8 +175,7 @@ export class CarListComponent implements OnInit, OnDestroy {
         // Scroll to top of results
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.loading.set(false);
       }
     });

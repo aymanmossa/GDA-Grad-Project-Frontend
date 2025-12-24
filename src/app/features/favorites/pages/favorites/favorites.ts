@@ -36,8 +36,7 @@ export class FavoritesComponent implements OnInit {
     loadFavorites(): void {
         this.loading.set(true);
         this.favoriteService.loadFavorites().subscribe({
-            next: (cars) => {
-                console.log('Favorites loaded in component:', cars);
+            next: () => {
                 this.loading.set(false);
             },
             error: (err) => {

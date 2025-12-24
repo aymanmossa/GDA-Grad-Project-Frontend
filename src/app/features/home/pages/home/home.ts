@@ -24,9 +24,5 @@ export class HomeComponent {
     const user = this.authService.currentUser();
     return user?.role === 'Customer';
   });
-
-  constructor() {
-    console.log('HomeComponent initialized');
-  }
 }
 

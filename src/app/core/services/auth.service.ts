@@ -41,7 +41,6 @@ export class AuthService {
 
   registerCustomer(data: IRegisterRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/register/customer`, data).pipe(
-      tap(res => console.log('Register Customer API Response:', res)),
       map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
@@ -49,7 +48,6 @@ export class AuthService {
 
   registerVendor(data: IRegisterRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/register/vendor`, data).pipe(
-      tap(res => console.log('Register Vendor API Response:', res)),
       map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
@@ -57,7 +55,6 @@ export class AuthService {
 
   login(credentials: ILoginRequest): Observable<IUser> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(res => console.log('Login API Response:', res)),
       map(res => this.mapResponseToUser(res)),
       tap(user => this.handleSuccess(user))
     );
@@ -77,13 +74,15 @@ export class AuthService {
   }
 
   get token(): string | null {
-    return this.currentUser()?.token || null;
+    return this.currentUser()?.token || localStorage.getItem('token') || null;
   }
 
   updateProfile(data: IUpdateProfileRequest): Observable<IUser> {
     const currentUserData = this.currentUser();
+    // Get token from currentUser or fallback to localStorage
+    const existingToken = currentUserData?.token || localStorage.getItem('token') || '';
+
     return this.http.put<any>(`${this.apiUrl}/profile`, data).pipe(
-      tap(res => console.log('Update Profile API Response:', res)),
       map(() => {
         // Merge submitted data with existing user data (API may not return full user object)
         const updatedUser: IUser = {
@@ -96,7 +95,7 @@ export class AuthService {
           phoneNumber: data.phoneNumber,
           createdDate: currentUserData?.createdDate || new Date().toISOString(),
           role: currentUserData?.role || 'Customer',
-          token: currentUserData?.token || ''
+          token: existingToken
         };
         return updatedUser;
       }),
@@ -105,9 +104,7 @@ export class AuthService {
   }
 
   changePassword(data: IChangePasswordRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/change-password`, data).pipe(
-      tap(() => console.log('Password changed successfully'))
-    );
+    return this.http.post<void>(`${this.apiUrl}/change-password`, data);
   }
 
   // Map API response directly to IUser (no JWT decoding needed)

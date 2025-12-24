@@ -45,6 +45,7 @@ export class CarManageComponent implements OnInit {
   isEditMode = false;
   isLoading = false;
   currentCarId: string | null = null;
+  errorMessage = signal<string | null>(null);
 
   uploadedFiles: any[] = [];
 
@@ -166,7 +167,6 @@ export class CarManageComponent implements OnInit {
 
     this.isLoading = true;
     const value = this.carForm.value;
-    console.log('Form value:', value);
 
     const formData = new FormData();
 
@@ -208,31 +208,64 @@ export class CarManageComponent implements OnInit {
 
     if (!this.isEditMode) {
       // create
+      this.errorMessage.set(null);
       this.carService.createCar(formData).subscribe({
         next: (res: ICar) => {
           this.isLoading = false;
           this.router.navigate(['/cars', res.carId]);
         },
         error: err => {
-          console.error('Create car error:', err);
-          console.error('Error details:', err.error);
-          alert('Error creating car: ' + JSON.stringify(err.error));
           this.isLoading = false;
+          this.errorMessage.set(this.parseErrorMessage(err));
         }
       });
     } else if (this.currentCarId) {
       // update
+      this.errorMessage.set(null);
       this.carService.updateCar(this.currentCarId, formData).subscribe({
         next: () => {
           this.isLoading = false;
           this.router.navigate(['/cars', this.currentCarId!]);
         },
         error: err => {
-          console.error(err);
           this.isLoading = false;
+          this.errorMessage.set(this.parseErrorMessage(err));
         }
       });
     }
+  }
+
+  // Parse error message from backend response
+  private parseErrorMessage(err: any): string {
+    // Handle array format: [{ code: "...", description: "..." }]
+    if (Array.isArray(err.error)) {
+      const messages = err.error
+        .map((e: { code?: string; description?: string; message?: string }) => e.description || e.message)
+        .filter((msg: string | undefined): msg is string => !!msg);
+      if (messages.length > 0) {
+        return messages.join('\n');
+      }
+    }
+
+    // Handle object with errors field (validation errors)
+    const errorsObj = err.error?.errors as Record<string, string[]> | undefined;
+    if (errorsObj) {
+      const allMessages = Object.values(errorsObj).flat();
+      return allMessages.join('\n');
+    }
+
+    // Handle object with message field
+    if (err.error?.message) {
+      return err.error.message;
+    }
+
+    // Handle string error
+    if (typeof err.error === 'string') {
+      return err.error;
+    }
+
+    // Default message
+    return 'An error occurred. Please check your data and try again.';
   }
 
   // ---------- files ----------

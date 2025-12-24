@@ -38,8 +38,6 @@ export class FavoriteService {
     loadFavorites(): Observable<ICar[]> {
         return this.http.get<any[]>(this.apiUrl).pipe(
             map(response => {
-                console.log('Favorites API response:', response);
-
                 // Handle different API response formats
                 if (!response || response.length === 0) {
                     return [];
@@ -67,7 +65,6 @@ export class FavoriteService {
                 });
             }),
             tap(cars => {
-                console.log('Processed favorites:', cars);
                 this._favorites.set(cars);
                 const ids = new Set(cars.map(c => c.carId).filter(id => id));
                 this._favoriteIds.set(ids);
@@ -82,8 +79,7 @@ export class FavoriteService {
     // Add a car to favorites
     addToFavorites(carId: string): Observable<any> {
         return this.http.post(this.apiUrl, { carId }).pipe(
-            tap((response) => {
-                console.log('Add to favorites response:', response);
+            tap(() => {
                 const currentIds = new Set(this._favoriteIds());
                 currentIds.add(carId);
                 this._favoriteIds.set(currentIds);

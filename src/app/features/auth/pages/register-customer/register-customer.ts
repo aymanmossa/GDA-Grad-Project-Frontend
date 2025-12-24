@@ -72,23 +72,16 @@ export class RegisterCustomerComponent {
     this.auth.registerCustomer(this.registerForm.value as IRegisterRequest)
       .pipe(
         finalize(() => {
-          console.log('Observable finalized (completed or errored)');
           this.loading = false;
           this.cdr.detectChanges(); // Force UI update
         })
       )
       .subscribe({
-        next: (res) => {
-          console.log('SUCCESS:', res);
+        next: () => {
           alert('Customer registration successful');
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          console.log('ERROR CALLBACK TRIGGERED');
-          console.log('FULL ERROR:', err);
-          console.log('err.error:', err.error);
-          console.log('err.error type:', typeof err.error);
-          console.log('Is array:', Array.isArray(err.error));
 
           // Handle array format: [{ code: "...", description: "..." }]
           if (Array.isArray(err.error)) {
@@ -105,10 +98,6 @@ export class RegisterCustomerComponent {
           const errorsObj = err.error?.errors as Record<string, string[]> | undefined;
 
           if (errorsObj) {
-            Object.entries(errorsObj).forEach(([field, messages]) => {
-              console.log(`Field: ${field}`, 'Messages:', messages);
-            });
-
             const allMessages = Object.values(errorsObj).flat();
 
             this.error = allMessages.join('\n');

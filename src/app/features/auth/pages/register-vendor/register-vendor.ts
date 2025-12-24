@@ -77,12 +77,11 @@ export class RegisterVendorComponent {
         })
       )
       .subscribe({
-        next: (res) => {
+        next: () => {
           alert('Vendor registration successful');
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          console.log('FULL ERROR:', err);
 
           // Handle array format: [{ code: "...", description: "..." }]
           if (Array.isArray(err.error)) {
@@ -99,10 +98,6 @@ export class RegisterVendorComponent {
           const errorsObj = err.error?.errors as Record<string, string[]> | undefined;
 
           if (errorsObj) {
-            Object.entries(errorsObj).forEach(([field, messages]) => {
-              console.log(`Field: ${field}`, 'Messages:', messages);
-            });
-
             const allMessages = Object.values(errorsObj).flat();
 
             this.error = allMessages.join('\n');
