@@ -43,7 +43,7 @@ export interface IAuthResponse {
     expiresAt: string;
 }
 
-// Interface for profile update request
+// Interface for profile update request (email and nationalId are required by backend but not editable by user)
 export interface IUpdateProfileRequest {
     firstName: string;
     lastName: string;

@@ -84,13 +84,13 @@ export class AuthService {
 
     return this.http.put<any>(`${this.apiUrl}/profile`, data).pipe(
       map(() => {
-        // Merge submitted data with existing user data (API may not return full user object)
+        // Merge submitted data with existing user data (email and nationalId are not editable)
         const updatedUser: IUser = {
           id: currentUserData?.id || '',
           firstName: data.firstName,
           lastName: data.lastName,
-          email: data.email,
-          nationalId: data.nationalId,
+          email: currentUserData?.email || '',
+          nationalId: currentUserData?.nationalId || '',
           address: data.address,
           phoneNumber: data.phoneNumber,
           createdDate: currentUserData?.createdDate || new Date().toISOString(),

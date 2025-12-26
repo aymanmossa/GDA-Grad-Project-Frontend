@@ -28,11 +28,10 @@ export class ProfileComponent {
     errorMessage = signal('');
 
     // Edit Profile Form
+    // Edit Profile Form (email and nationalId are not editable)
     profileForm: FormGroup = this.fb.group({
         firstName: ['', [Validators.required, Validators.minLength(2)]],
         lastName: ['', [Validators.required, Validators.minLength(2)]],
-        email: ['', [Validators.required, Validators.email]],
-        nationalId: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
         address: ['', [Validators.required]],
         phoneNumber: ['', [Validators.required, Validators.pattern(/^01[0-2,5]{1}[0-9]{8}$/)]]
     });
@@ -108,8 +107,6 @@ export class ProfileComponent {
             this.profileForm.patchValue({
                 firstName: user.firstName,
                 lastName: user.lastName,
-                email: user.email,
-                nationalId: user.nationalId,
                 address: user.address,
                 phoneNumber: user.phoneNumber || ''
             });
@@ -149,7 +146,12 @@ export class ProfileComponent {
         this.isLoading.set(true);
         this.clearMessages();
 
-        const data: IUpdateProfileRequest = this.profileForm.value;
+        // Include email and nationalId from currentUser (required by backend but not editable)
+        const data: IUpdateProfileRequest = {
+            ...this.profileForm.value,
+            email: this.currentUser?.email || '',
+            nationalId: this.currentUser?.nationalId || ''
+        };
 
         this.authService.updateProfile(data).subscribe({
             next: () => {
