@@ -164,7 +164,7 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     updateModel(item: EditableItem): void {
-        if (!item.editName?.trim() || !item.editParentId) return;
+        if (!item.editName?.trim() || item.editParentId == null) return;
         this.isSaving.set(true);
         this.adminService.updateModel(item.id, {
             modelName: item.editName.trim(),

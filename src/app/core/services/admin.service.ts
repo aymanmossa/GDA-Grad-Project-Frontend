@@ -53,8 +53,7 @@ export class AdminService {
     }
 
     updateModel(id: number, data: ICreateModel): Observable<IModel> {
-        const payload: IUpdateModel = { modelId: id, modelName: data.modelName, makeId: data.makeId };
-        return this.http.put<IModel>(`${this.baseUrl}/Model`, payload);
+        return this.http.put<IModel>(`${this.baseUrl}/Model/${id}`, data);
     }
 
     deleteModel(id: number): Observable<void> {
