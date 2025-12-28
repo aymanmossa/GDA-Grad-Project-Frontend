@@ -387,11 +387,215 @@
         <i class="fa-solid fa-file-lines me-2 text-blue-600 dark:text-blue-400"></i>
         Description
       </h5>
-      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
         {{ c.description || 'No description provided.' }}
       </p>
     </div>
   </div>
+
+  <!-- Row 4: Suggested Cars Carousel -->
+  @if (suggestedCars().length > 0) {
+  <div class="mb-6">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-gray-900/50 p-6 border border-gray-200 dark:border-gray-700">
+      <h5 class="font-bold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
+        <i class="fa-solid fa-car me-2 text-blue-600 dark:text-blue-400"></i>
+        More {{ c.makeName }} Cars You Might Like
+      </h5>
+
+      <div class="relative">
+        <!-- Previous Button -->
+        <button type="button" (click)="scrollSuggestionPrev()" [disabled]="!canScrollPrevSuggestion"
+          class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-3 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all border border-gray-200 dark:border-gray-600">
+          <i class="fa-solid fa-chevron-left text-gray-800 dark:text-white"></i>
+        </button>
+
+        <!-- Carousel Container -->
+        <div class="overflow-hidden px-4">
+          <div class="flex transition-transform duration-300 ease-in-out gap-4"
+            [style.transform]="'translateX(-' + (suggestionScrollIndex() * (100 / visibleSuggestionsCount)) + '%)'">
+            @for (suggestedCar of suggestedCars(); track suggestedCar.carId) {
+            <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 p-1">
+              <a [routerLink]="['/cars', suggestedCar.carId]"
+                class="block bg-gray-50 dark:bg-gray-700/50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 group">
+                <!-- Car Image -->
+                <div class="relative h-40 overflow-hidden">
+                  @if (suggestedCar.imageUrls && suggestedCar.imageUrls.length > 0) {
+                  <img [src]="'https://carnest.runasp.net/' + suggestedCar.imageUrls[0]"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    [alt]="suggestedCar.makeName + ' ' + suggestedCar.modelName" />
+                  } @else {
+                  <div
+                    class="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                    <i class="fa-solid fa-car text-4xl"></i>
+                  </div>
+                  }
+                  <!-- Condition Badge -->
+                  <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+                      'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400': suggestedCar.condition === CarCondition.New,
+                      'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400': suggestedCar.condition === CarCondition.Used
+                    }">
+                    {{ suggestedCar.condition === CarCondition.New ? 'New' : 'Used' }}
+                  </span>
+                </div>
+
+                <!-- Car Info -->
+                <div class="p-4">
+                  <h6 class="font-bold text-gray-900 dark:text-white mb-1 truncate">
+                    {{ suggestedCar.makeName }} {{ suggestedCar.modelName }}
+                  </h6>
+                  <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                    {{ suggestedCar.year }} • {{ suggestedCar.mileage | number }} km
+                  </p>
+                  <div class="text-blue-600 dark:text-blue-400 font-bold text-lg">
+                    {{ suggestedCar.price | currency: 'EGP ' }}
+                  </div>
+                </div>
+              </a>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <button type="button" (click)="scrollSuggestionNext()" [disabled]="!canScrollNextSuggestion"
+          class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-3 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all border border-gray-200 dark:border-gray-600">
+          <i class="fa-solid fa-chevron-right text-gray-800 dark:text-white"></i>
+        </button>
+      </div>
+
+      <!-- Carousel Indicators -->
+      @if (suggestedCars().length > visibleSuggestionsCount) {
+      <div class="flex justify-center gap-2 mt-4">
+        @for (car of suggestedCars(); track $index; let i = $index) {
+        @if (i <= suggestedCars().length - visibleSuggestionsCount) { <button type="button"
+          (click)="suggestionScrollIndex.set(i)" class="w-2 h-2 rounded-full transition-all" [ngClass]="{
+            'bg-blue-600 dark:bg-blue-400 w-4': i === suggestionScrollIndex(),
+            'bg-gray-300 dark:bg-gray-600': i !== suggestionScrollIndex()
+          }"></button>
+          }
+          }
+      </div>
+      }
+    </div>
+  </div>
+  } @else if (loadingSuggestions()) {
+  <div class="mb-6">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-gray-900/50 p-6 border border-gray-200 dark:border-gray-700">
+      <h5 class="font-bold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
+        <i class="fa-solid fa-car me-2 text-blue-600 dark:text-blue-400"></i>
+        Loading Suggestions...
+      </h5>
+      <div class="flex justify-center py-8">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400">
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Row 5: Similar Price Cars Carousel -->
+  @if (similarPriceCars().length > 0) {
+  <div class="mb-6">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-gray-900/50 p-6 border border-gray-200 dark:border-gray-700">
+      <h5 class="font-bold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
+        <i class="fa-solid fa-tags me-2 text-green-600 dark:text-green-400"></i>
+        Cars in Price Range
+      </h5>
+
+      <div class="relative">
+        <!-- Previous Button -->
+        <button type="button" (click)="scrollSimilarPricePrev()" [disabled]="!canScrollPrevSimilarPrice"
+          class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-3 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all border border-gray-200 dark:border-gray-600">
+          <i class="fa-solid fa-chevron-left text-gray-800 dark:text-white"></i>
+        </button>
+
+        <!-- Carousel Container -->
+        <div class="overflow-hidden px-4">
+          <div class="flex transition-transform duration-300 ease-in-out gap-4"
+            [style.transform]="'translateX(-' + (similarPriceScrollIndex() * (100 / visibleSuggestionsCount)) + '%)'">
+            @for (priceCar of similarPriceCars(); track priceCar.carId) {
+            <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 p-1">
+              <a [routerLink]="['/cars', priceCar.carId]"
+                class="block bg-gray-50 dark:bg-gray-700/50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-600 hover:border-green-400 dark:hover:border-green-500 group">
+                <!-- Car Image -->
+                <div class="relative h-40 overflow-hidden">
+                  @if (priceCar.imageUrls && priceCar.imageUrls.length > 0) {
+                  <img [src]="'https://carnest.runasp.net/' + priceCar.imageUrls[0]"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    [alt]="priceCar.makeName + ' ' + priceCar.modelName" />
+                  } @else {
+                  <div
+                    class="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                    <i class="fa-solid fa-car text-4xl"></i>
+                  </div>
+                  }
+                  <!-- Condition Badge -->
+                  <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+                      'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400': priceCar.condition === CarCondition.New,
+                      'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400': priceCar.condition === CarCondition.Used
+                    }">
+                    {{ priceCar.condition === CarCondition.New ? 'New' : 'Used' }}
+                  </span>
+                </div>
+
+                <!-- Car Info -->
+                <div class="p-4">
+                  <h6 class="font-bold text-gray-900 dark:text-white mb-1 truncate">
+                    {{ priceCar.makeName }} {{ priceCar.modelName }}
+                  </h6>
+                  <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">
+                    {{ priceCar.year }} • {{ priceCar.mileage | number }} km
+                  </p>
+                  <div class="text-green-600 dark:text-green-400 font-bold text-lg">
+                    {{ priceCar.price | currency: 'EGP ' }}
+                  </div>
+                </div>
+              </a>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <button type="button" (click)="scrollSimilarPriceNext()" [disabled]="!canScrollNextSimilarPrice"
+          class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full p-3 shadow-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all border border-gray-200 dark:border-gray-600">
+          <i class="fa-solid fa-chevron-right text-gray-800 dark:text-white"></i>
+        </button>
+      </div>
+
+      <!-- Carousel Indicators -->
+      @if (similarPriceCars().length > visibleSuggestionsCount) {
+      <div class="flex justify-center gap-2 mt-4">
+        @for (car of similarPriceCars(); track $index; let i = $index) {
+        @if (i <= similarPriceCars().length - visibleSuggestionsCount) { <button type="button"
+          (click)="similarPriceScrollIndex.set(i)" class="w-2 h-2 rounded-full transition-all" [ngClass]="{
+            'bg-green-600 dark:bg-green-400 w-4': i === similarPriceScrollIndex(),
+            'bg-gray-300 dark:bg-gray-600': i !== similarPriceScrollIndex()
+          }"></button>
+          }
+          }
+      </div>
+      }
+    </div>
+  </div>
+  } @else if (loadingSimilarPrice()) {
+  <div class="mb-6">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-md dark:shadow-gray-900/50 p-6 border border-gray-200 dark:border-gray-700">
+      <h5 class="font-bold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
+        <i class="fa-solid fa-tags me-2 text-green-600 dark:text-green-400"></i>
+        Loading Similar Priced Cars...
+      </h5>
+      <div class="flex justify-center py-8">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 dark:border-green-400">
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 </div>
 } @else {
 <div class="container mx-auto py-8 px-4">

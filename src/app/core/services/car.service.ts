@@ -92,6 +92,34 @@ export class CarService {
     return this.http.delete<void>(`${this.baseUrl}/Car/${id}`);
   }
 
+  getSuggestedCars(makeId: number, excludeCarId: string, limit = 10): Observable<ICar[]> {
+    const params = new HttpParams()
+      .set('makeId', makeId)
+      .set('pageNumber', 1)
+      .set('pageSize', limit + 1); // Fetch one extra in case we need to exclude the current car
+
+    return this.http.get<IPagedResponse<ICar>>(`${this.baseUrl}/Car`, { params }).pipe(
+      map(response => response.data.filter(car => car.carId !== excludeCarId).slice(0, limit))
+    );
+  }
+
+  getSimilarPricedCars(price: number, excludeCarId: string, limit = 10): Observable<ICar[]> {
+    // Get cars within ±20% of the current car's price
+    const priceRange = price * 0.2;
+    const minPrice = Math.max(0, price - priceRange);
+    const maxPrice = price + priceRange;
+
+    const params = new HttpParams()
+      .set('minPrice', Math.floor(minPrice))
+      .set('maxPrice', Math.ceil(maxPrice))
+      .set('pageNumber', 1)
+      .set('pageSize', limit + 1);
+
+    return this.http.get<IPagedResponse<ICar>>(`${this.baseUrl}/Car`, { params }).pipe(
+      map(response => response.data.filter(car => car.carId !== excludeCarId).slice(0, limit))
+    );
+  }
+
   uploadCarImage(carId: string, files: File[]): Observable<any> {
     const formData = new FormData();
     files.forEach(file => {
