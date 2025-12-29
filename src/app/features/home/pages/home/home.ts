@@ -24,5 +24,10 @@ export class HomeComponent {
     const user = this.authService.currentUser();
     return user?.role === 'Customer';
   });
+
+  // Check if user is authenticated (logged in)
+  isAuthenticated = computed(() => {
+    return this.authService.currentUser() !== null;
+  });
 }
 
