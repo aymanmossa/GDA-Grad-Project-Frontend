@@ -15,7 +15,8 @@ import {
   ILocation,
   CarCondition,
   CarGearType,
-  DrivetrainType
+  DrivetrainType,
+  CarStatus
 } from '../../../../shared/models/car.model';
 
 @Component({
@@ -37,6 +38,7 @@ export class CarListComponent implements OnInit, OnDestroy {
   CarCondition = CarCondition;
   CarGearType = CarGearType;
   DrivetrainType = DrivetrainType;
+  CarStatus = CarStatus;
 
   // --- Signals ---
   cars = signal<ICar[]>([]);
@@ -76,6 +78,29 @@ export class CarListComponent implements OnInit, OnDestroy {
   get isCustomer(): boolean {
     const user = this.authService.currentUser();
     return !!user && user.role === 'Customer';
+  }
+
+  get isVendor(): boolean {
+    const user = this.authService.currentUser();
+    return !!user && user.role === 'Vendor';
+  }
+
+  getStatusLabel(status: CarStatus): string {
+    switch (status) {
+      case CarStatus.Pending: return 'Pending';
+      case CarStatus.Approved: return 'Approved';
+      case CarStatus.Rejected: return 'Rejected';
+      default: return 'Unknown';
+    }
+  }
+
+  getStatusClass(status: CarStatus): string {
+    switch (status) {
+      case CarStatus.Pending: return 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700';
+      case CarStatus.Approved: return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700';
+      case CarStatus.Rejected: return 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-400 dark:border-red-700';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-700';
+    }
   }
 
   isFavorite(carId: string): boolean {

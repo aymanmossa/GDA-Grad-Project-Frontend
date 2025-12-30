@@ -260,6 +260,20 @@
                 </span>
                 }
               </div>
+
+              <!-- Status Badge (Vendor only) -->
+              @if (isVendor) {
+              <div class="absolute bottom-2 right-2">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold border"
+                  [ngClass]="getStatusClass(car.status)">
+                  <i class="fa-solid mr-1" [ngClass]="{
+                    'fa-clock': car.status === CarStatus.Pending,
+                    'fa-check-circle': car.status === CarStatus.Approved,
+                    'fa-times-circle': car.status === CarStatus.Rejected
+                  }"></i>{{ getStatusLabel(car.status) }}
+                </span>
+              </div>
+              }
             </div>
             <div class="p-4">
               <h5 class="font-bold text-lg mb-2 text-gray-900 dark:text-white">

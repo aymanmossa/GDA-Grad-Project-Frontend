@@ -26,8 +26,8 @@ export class RegisterCustomerComponent {
   }
 
   registerForm = this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\u0600-\u06FF\s]+$/)]],
+    lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\u0600-\u06FF\s]+$/)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     nationalId: ['', [Validators.required, Validators.pattern(/^\d{14}$/)]],
@@ -50,6 +50,8 @@ export class RegisterCustomerComponent {
     if (field.errors['email']) return 'Please enter a valid email address';
     if (field.errors['minlength']) return `Minimum length is ${field.errors['minlength'].requiredLength} characters`;
     if (field.errors['pattern']) {
+      if (fieldName === 'firstName') return 'First name cannot contain numbers';
+      if (fieldName === 'lastName') return 'Last name cannot contain numbers';
       if (fieldName === 'nationalId') return 'National ID must be exactly 14 digits';
       if (fieldName === 'phoneNumber') return 'Phone number is Invalid';
     }
