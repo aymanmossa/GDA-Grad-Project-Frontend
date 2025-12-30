@@ -25,6 +25,12 @@ export class HomeComponent {
     return user?.role === 'Customer';
   });
 
+  // Check if the current user is an admin
+  isAdmin = computed(() => {
+    const user = this.authService.currentUser();
+    return user?.role === 'Admin';
+  });
+
   // Check if user is authenticated (logged in)
   isAuthenticated = computed(() => {
     return this.authService.currentUser() !== null;

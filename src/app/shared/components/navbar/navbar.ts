@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
+import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,8 +15,10 @@ import { ThemeService } from '../../../core/services/theme.service';
 export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
   private themeService = inject(ThemeService);
+  private adminService = inject(AdminService);
 
   mobileMenuOpen = signal(false);
+  pendingCarsCount = signal(0);
 
   get currentUser() {
     return this.authService.currentUser();
@@ -42,6 +45,11 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Load pending cars count for admin
+    if (this.isAdmin) {
+      this.loadPendingCarsCount();
+    }
+
     // Toggle mobile menu
     if (typeof document !== 'undefined') {
       const button = document.getElementById('mobile-menu-button');
@@ -54,6 +62,18 @@ export class NavbarComponent implements OnInit {
         });
       }
     }
+  }
+
+  loadPendingCarsCount() {
+    this.adminService.getPendingCars().subscribe({
+      next: (data: any) => {
+        const cars = Array.isArray(data) ? data : (data?.items || data?.data || []);
+        this.pendingCarsCount.set(cars.length);
+      },
+      error: () => {
+        this.pendingCarsCount.set(0);
+      }
+    });
   }
 
   toggleMobileMenu() {

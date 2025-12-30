@@ -11,12 +11,19 @@ import { roleGuard } from './core/guards/role-guard';
 import { guestGuard } from './core/guards/guest-guard';
 import { FavoritesComponent } from './features/favorites/pages/favorites/favorites';
 import { AdminDashboardComponent } from './features/admin/pages/admin-dashboard/admin-dashboard';
+import { CarApprovalsComponent } from './features/admin/pages/car-approvals/car-approvals';
 import { ProfileComponent } from './features/profile/pages/profile/profile';
 
 export const routes: Routes = [
     {
         path: 'admin',
         component: AdminDashboardComponent,
+        canActivate: [authGuard, roleGuard],
+        data: { role: ['Admin'] }
+    },
+    {
+        path: 'car-approvals',
+        component: CarApprovalsComponent,
         canActivate: [authGuard, roleGuard],
         data: { role: ['Admin'] }
     },

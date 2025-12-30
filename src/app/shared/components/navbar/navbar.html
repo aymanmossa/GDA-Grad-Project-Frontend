@@ -38,6 +38,15 @@
           <i class="fa-solid fa-gauge-high mr-1"></i>
           Dashboard
         </a>
+        <a routerLink="/car-approvals" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+          class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center">
+          <i class="fa-solid fa-clipboard-check mr-1"></i>
+          Car Approvals
+          @if (pendingCarsCount() > 0) {
+          <span class="ml-2 px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">{{ pendingCarsCount()
+            }}</span>
+          }
+        </a>
         }
         @if (isCustomer) {
         <a routerLink="/favorites" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
@@ -143,6 +152,15 @@
           class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 flex items-center">
           <i class="fa-solid fa-gauge-high mr-1"></i>
           Dashboard
+        </a>
+        <a routerLink="/car-approvals" routerLinkActive="text-blue-600 dark:text-blue-400 font-semibold"
+          class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-2 py-1 flex items-center">
+          <i class="fa-solid fa-clipboard-check mr-1"></i>
+          Car Approvals
+          @if (pendingCarsCount() > 0) {
+          <span class="ml-2 px-2 py-0.5 text-xs font-semibold bg-red-500 text-white rounded-full">{{ pendingCarsCount()
+            }}</span>
+          }
         </a>
         }
         @if (isCustomer) {

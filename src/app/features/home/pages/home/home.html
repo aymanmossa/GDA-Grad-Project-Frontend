@@ -97,8 +97,69 @@
         <p class="text-xl text-gray-600 dark:text-gray-400">Choose the perfect option for your needs</p>
     </div>
 
+    <!-- Admin view: Show "Car Approvals" with danger theme -->
+    @if (isAdmin()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <!-- Dashboard -->
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-200 dark:border-gray-700">
+            <div class="relative h-48 overflow-hidden">
+                <img src="https://images.pexels.com/photos/7947541/pexels-photo-7947541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                    alt="Admin Dashboard">
+                <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-gauge-high mr-1"></i> Admin
+                </div>
+            </div>
+            <div class="p-6 flex flex-col">
+                <div class="flex items-center mb-3">
+                    <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg mr-3">
+                        <i class="fa-solid fa-gauge-high text-blue-600 dark:text-blue-400 text-2xl"></i>
+                    </div>
+                    <h5 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h5>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                    Manage car brands, models, body types, fuel types, and locations.
+                </p>
+                <a class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
+                    [routerLink]="['/admin']">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Car Approvals with danger theme -->
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-red-200 dark:border-red-700">
+            <div class="relative h-48 overflow-hidden">
+                <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+                    alt="Car Approvals">
+                <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <i class="fa-solid fa-clipboard-check mr-1"></i> Review
+                </div>
+            </div>
+            <div class="p-6 flex flex-col">
+                <div class="flex items-center mb-3">
+                    <div class="bg-red-100 dark:bg-red-900 p-3 rounded-lg mr-3">
+                        <i class="fa-solid fa-clipboard-check text-red-600 dark:text-red-400 text-2xl"></i>
+                    </div>
+                    <h5 class="text-2xl font-bold text-gray-900 dark:text-white">Car Approvals</h5>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 flex-grow">
+                    Review pending car listings and approve or reject them before they go live.
+                </p>
+                <a class="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 text-center shadow-md hover:shadow-lg"
+                    [routerLink]="['/car-approvals']">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    Review Cars
+                </a>
+            </div>
+        </div>
+    </div>
+    } @else if (isVendor()) {
     <!-- Vendor view: Show "View Your Listed Cars" and "Sell Your Car" -->
-    @if (isVendor()) {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         <!-- View Your Listed Cars -->
         <div

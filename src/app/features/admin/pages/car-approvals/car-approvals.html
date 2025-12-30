@@ -1,0 +1,154 @@
+<div class="container mx-auto py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Car Approvals</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Review and approve or reject car listings</p>
+        </div>
+
+        <!-- Car Approvals Content -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+            <!-- Pending Cars Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-medium text-yellow-600 dark:text-yellow-400 mb-4 flex items-center">
+                    <i class="fa-solid fa-clock mr-2"></i>Pending Approval ({{ pendingCars().length }})
+                </h3>
+
+                @if (pendingCars().length === 0) {
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-check-circle text-4xl mb-3 block opacity-50"></i>
+                    No cars pending approval
+                </div>
+                } @else {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @for (car of pendingCars(); track car.carId) {
+                    <div
+                        class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                        <!-- Car Image -->
+                        <div class="aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-600 mb-3">
+                            @if (car.imageUrls && car.imageUrls.length > 0) {
+                            <img [src]="'https://carnest.runasp.net/' + car.imageUrls[0]"
+                                [alt]="car.makeName + ' ' + car.modelName" class="w-full h-full object-cover" />
+                            } @else {
+                            <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-car text-4xl"></i>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Car Info -->
+                        <h4 class="font-semibold text-gray-900 dark:text-white">{{ car.makeName }} {{ car.modelName }}
+                        </h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ car.year }} • {{ car.price | number }}
+                            EGP</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            <i class="fa-solid fa-user mr-1"></i>{{ car.publisherName }}
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <i class="fa-solid fa-phone mr-1"></i>{{ car.publisherPhone }}
+                        </p>
+
+                        <!-- Car License (Admin Only) -->
+                        @if (car.carLicenseUrl) {
+                        <div class="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <p class="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
+                                <i class="fa-solid fa-file-contract mr-1"></i>Car License
+                            </p>
+                            <a [href]="'https://carnest.runasp.net/' + car.carLicenseUrl" target="_blank"
+                                class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                View License Document
+                            </a>
+                        </div>
+                        }
+
+                        <!-- Actions -->
+                        <div class="flex gap-2 mt-4">
+                            <button (click)="approveCar(car.carId)" [disabled]="isSaving()"
+                                class="flex-1 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors disabled:opacity-50">
+                                <i class="fa-solid fa-check mr-1"></i>Approve
+                            </button>
+                            <button (click)="rejectCar(car.carId)" [disabled]="isSaving()"
+                                class="flex-1 px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 rounded-lg transition-colors disabled:opacity-50">
+                                <i class="fa-solid fa-xmark mr-1"></i>Reject
+                            </button>
+                        </div>
+                        <a [href]="'/cars/' + car.carId" target="_blank"
+                            class="block mt-2 text-center text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                            <i class="fa-solid fa-external-link mr-1"></i>View Details
+                        </a>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Rejected Cars Section -->
+            <div>
+                <h3 class="text-lg font-medium text-red-600 dark:text-red-400 mb-4 flex items-center">
+                    <i class="fa-solid fa-ban mr-2"></i>Rejected ({{ rejectedCars().length }})
+                </h3>
+
+                @if (rejectedCars().length === 0) {
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-inbox text-4xl mb-3 block opacity-50"></i>
+                    No rejected cars
+                </div>
+                } @else {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @for (car of rejectedCars(); track car.carId) {
+                    <div
+                        class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-red-200 dark:border-red-800/50">
+                        <!-- Car Image -->
+                        <div
+                            class="aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-600 mb-3 opacity-75">
+                            @if (car.imageUrls && car.imageUrls.length > 0) {
+                            <img [src]="'https://carnest.runasp.net/' + car.imageUrls[0]"
+                                [alt]="car.makeName + ' ' + car.modelName" class="w-full h-full object-cover" />
+                            } @else {
+                            <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                <i class="fa-solid fa-car text-4xl"></i>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Car Info -->
+                        <h4 class="font-semibold text-gray-900 dark:text-white">{{ car.makeName }} {{ car.modelName }}
+                        </h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ car.year }} • {{ car.price | number }}
+                            EGP</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            <i class="fa-solid fa-user mr-1"></i>{{ car.publisherName }}
+                        </p>
+
+                        <!-- Car License (Admin Only) -->
+                        @if (car.carLicenseUrl) {
+                        <div class="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <p class="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
+                                <i class="fa-solid fa-file-contract mr-1"></i>Car License
+                            </p>
+                            <a [href]="'https://carnest.runasp.net/' + car.carLicenseUrl" target="_blank"
+                                class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                View License Document
+                            </a>
+                        </div>
+                        }
+
+                        <!-- Actions -->
+                        <div class="mt-4">
+                            <button (click)="approveCar(car.carId)" [disabled]="isSaving()"
+                                class="w-full px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors disabled:opacity-50">
+                                <i class="fa-solid fa-redo mr-1"></i>Reapprove
+                            </button>
+                        </div>
+                        <a [href]="'/cars/' + car.carId" target="_blank"
+                            class="block mt-2 text-center text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                            <i class="fa-solid fa-external-link mr-1"></i>View Details
+                        </a>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
