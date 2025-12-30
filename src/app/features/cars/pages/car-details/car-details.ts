@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CarService } from '../../../../core/services/car.service';
-import { ICar, CarCondition, CarGearType, DrivetrainType } from '../../../../shared/models/car.model';
+import { ICar, CarCondition, CarGearType, DrivetrainType, CarStatus } from '../../../../shared/models/car.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FavoriteService } from '../../../../core/services/favorite.service';
 
@@ -42,6 +42,25 @@ export class CarDetailsComponent implements OnInit {
   CarCondition = CarCondition;
   CarGearType = CarGearType;
   DrivetrainType = DrivetrainType;
+  CarStatus = CarStatus;
+
+  getStatusLabel(status: CarStatus): string {
+    switch (status) {
+      case CarStatus.Pending: return 'Pending Approval';
+      case CarStatus.Approved: return 'Approved';
+      case CarStatus.Rejected: return 'Rejected';
+      default: return 'Unknown';
+    }
+  }
+
+  getStatusClass(status: CarStatus): string {
+    switch (status) {
+      case CarStatus.Pending: return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-300 dark:border-yellow-700';
+      case CarStatus.Approved: return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-300 dark:border-green-700';
+      case CarStatus.Rejected: return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-300 dark:border-red-700';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border-gray-300 dark:border-gray-700';
+    }
+  }
 
   get canEdit(): boolean {
     const user = this.auth.currentUser();

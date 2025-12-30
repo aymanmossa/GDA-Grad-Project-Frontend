@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ICar, CarFilter, IMake, IModel, IBodyType, IFuelType, ILocation, IPagedResponse } from '../../shared/models/car.model';
+import { ICar, CarFilter, CarStatus, IMake, IModel, IBodyType, IFuelType, ILocation, IPagedResponse } from '../../shared/models/car.model';
 
 @Injectable({
   providedIn: 'root',
@@ -91,6 +91,16 @@ export class CarService {
   deleteCar(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/Car/${id}`);
   }
+
+  // Car approval workflow methods
+  getPendingCars(): Observable<ICar[]> {
+    return this.http.get<ICar[]>(`${this.baseUrl}/Car/pending`);
+  }
+
+  getRejectedCars(): Observable<ICar[]> {
+    return this.http.get<ICar[]>(`${this.baseUrl}/Car/rejected`);
+  }
+
 
   getSuggestedCars(makeId: number, excludeCarId: string, limit = 10): Observable<ICar[]> {
     const params = new HttpParams()

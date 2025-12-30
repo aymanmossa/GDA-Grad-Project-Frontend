@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMake, IModel, IBodyType, IFuelType, ILocation } from '../../shared/models/car.model';
+import { IMake, IModel, IBodyType, IFuelType, ILocation, ICar } from '../../shared/models/car.model';
 
 export interface ICreateMake { makeName: string; }
 export interface IUpdateMake { makeId: number; makeName: string; }
@@ -112,5 +112,18 @@ export class AdminService {
 
     deleteLocation(id: number): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/LocationCity/${id}`);
+    }
+
+    // ==================== Car Approvals ====================
+    getPendingCars(): Observable<ICar[]> {
+        return this.http.get<ICar[]>(`${this.baseUrl}/Car/pending`);
+    }
+
+    getRejectedCars(): Observable<ICar[]> {
+        return this.http.get<ICar[]>(`${this.baseUrl}/Car/rejected`);
+    }
+
+    updateCarStatus(carId: string, status: number): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/Car/${carId}/status?status=${status}`, {});
     }
 }

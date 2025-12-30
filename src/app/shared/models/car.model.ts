@@ -29,6 +29,12 @@ export enum DrivetrainType {
   FourWD = 3
 }
 
+export enum CarStatus {
+  Pending = 0,
+  Approved = 1,
+  Rejected = 2
+}
+
 export interface ICar {
   carId: string;
   year: number;
@@ -67,6 +73,10 @@ export interface ICar {
   publisherName: string;
   publisherPhone: string;
   publisherEmail: string;
+
+  // Approval workflow fields
+  status: CarStatus;
+  carLicenseUrl: string;
 
 }
 

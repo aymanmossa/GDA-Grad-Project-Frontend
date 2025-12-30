@@ -49,6 +49,11 @@ export class CarManageComponent implements OnInit {
 
   uploadedFiles: any[] = [];
 
+  // Car license file
+  carLicenseFile: File | null = null;
+  carLicensePreview: string | null = null;
+  existingCarLicenseUrl: string | null = null;
+
   ngOnInit(): void {
     this.initForm();
     this.loadLookups();
@@ -83,7 +88,8 @@ export class CarManageComponent implements OnInit {
       FuelId: [null, Validators.required],
       LocId: [null, Validators.required],
       Description: ['', Validators.required],
-      images: [null]
+      images: [null],
+      carLicense: [null] // Car license image for admin approval
     });
   }
 
@@ -144,6 +150,11 @@ export class CarManageComponent implements OnInit {
       if (res.makeId) {
         this.carService.getModelsByMake(res.makeId).subscribe(models => this.models.set(models));
       }
+
+      // Load existing car license URL
+      if (res.carLicenseUrl) {
+        this.existingCarLicenseUrl = 'https://carnest.runasp.net/' + res.carLicenseUrl;
+      }
     });
   }
 
@@ -201,10 +212,23 @@ export class CarManageComponent implements OnInit {
     const images = this.carForm.get('images')?.value;
     if (images && images.length > 0) {
       images.forEach((img: any) => {
-        formData.append('images', img);
+        formData.append('Images', img);
       });
     }
 
+    // Car license file
+    if (this.carLicenseFile) {
+      formData.append('LicenseImage', this.carLicenseFile);
+      console.log('Car license file attached:', this.carLicenseFile.name, this.carLicenseFile.type);
+    } else {
+      console.warn('No car license file selected!');
+    }
+
+    // Debug: Log all FormData entries
+    console.log('FormData entries:');
+    formData.forEach((value, key) => {
+      console.log(`  ${key}:`, value instanceof File ? `[File: ${value.name}]` : value);
+    });
 
     if (!this.isEditMode) {
       // create
@@ -325,6 +349,34 @@ export class CarManageComponent implements OnInit {
     if (['doc', 'docx'].includes(ext)) return 'word';
     if (['xls', 'xlsx'].includes(ext)) return 'excel';
     return 'other';
+  }
+
+  // Car License file handling
+  onCarLicenseSelected(event: Event) {
+    console.log('onCarLicenseSelected triggered');
+    const files = (event.target as HTMLInputElement).files;
+    if (!files || files.length === 0) {
+      console.warn('No files in file input');
+      return;
+    }
+
+    const file = files[0];
+    this.carLicenseFile = file;
+    console.log('Car license file set:', file.name, file.type, file.size);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.carLicensePreview = reader.result as string;
+      this.existingCarLicenseUrl = null; // Clear existing URL when new file is selected
+      console.log('Car license preview set');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeCarLicense() {
+    this.carLicenseFile = null;
+    this.carLicensePreview = null;
+    this.existingCarLicenseUrl = null;
   }
 }
 

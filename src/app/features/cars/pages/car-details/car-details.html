@@ -104,6 +104,16 @@
               class="bg-gray-100 dark:bg-gray-700 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 text-xs px-3 py-1 rounded-full font-semibold">
               <i class="fa-solid fa-tag me-1"></i> For sale
             </span>
+            @if (canEdit || isAdmin) {
+            <span class="text-xs px-3 py-1 rounded-full font-semibold border ml-2" [ngClass]="getStatusClass(c.status)">
+              <i class="fa-solid" [ngClass]="{
+                'fa-clock': c.status === CarStatus.Pending,
+                'fa-check-circle': c.status === CarStatus.Approved,
+                'fa-times-circle': c.status === CarStatus.Rejected
+              }"></i>
+              {{ getStatusLabel(c.status) }}
+            </span>
+            }
             @if (isCustomer) {
             <button type="button" (click)="toggleFavorite()" [disabled]="favoriting()"
               class="mt-2 w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
