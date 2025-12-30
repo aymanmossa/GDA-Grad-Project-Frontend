@@ -29,7 +29,7 @@ export class RegisterCustomerComponent {
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\u0600-\u06FF\s]+$/)]],
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\u0600-\u06FF\s]+$/)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/)]],
     nationalId: ['', [Validators.required, Validators.pattern(/^\d{14}$/)]],
     address: ['', Validators.required],
     phoneNumber: ['', [Validators.required, Validators.pattern(/^01[0125]\d{8}$/)]],
@@ -54,6 +54,7 @@ export class RegisterCustomerComponent {
       if (fieldName === 'lastName') return 'Last name cannot contain numbers';
       if (fieldName === 'nationalId') return 'National ID must be exactly 14 digits';
       if (fieldName === 'phoneNumber') return 'Phone number is Invalid';
+      if (fieldName === 'password') return 'Password must contain uppercase, lowercase, number, and symbol';
     }
     return 'Invalid value';
   }
