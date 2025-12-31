@@ -1,59 +1,170 @@
-# CarRentalFront
+# 🚗 CarNest - Car Rental Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+A modern, full-featured car rental platform built with Angular 20. CarNest connects car vendors with customers, providing a seamless experience for browsing, listing, and renting vehicles.
 
-## Development server
+![Angular](https://img.shields.io/badge/Angular-20.3.0-red?style=flat-square&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-To start a local development server, run:
+## ✨ Features
 
-```bash
-ng serve
+### For Customers
+- 🔍 **Browse Cars** - Explore available new and used cars with advanced filtering
+- ❤️ **Favorites** - Save cars to your favorites list for quick access
+- 📋 **Car Details** - View comprehensive car information including specs, images, and pricing
+- 👤 **User Profile** - Manage your account information and preferences
+
+### For Vendors
+- 📝 **Car Management** - Add, edit, and delete car listings
+- 📸 **Image Upload** - Upload multiple car images including license documentation
+- 📊 **Listing Status** - Track approval status (pending, approved, rejected)
+
+### For Admins
+- 🛠️ **Dashboard** - Comprehensive admin panel for managing the platform
+- ✅ **Car Approval** - Review and approve/reject car listings
+- 🏷️ **Model Management** - Manage car brands and models
+
+### General
+- 🔐 **Authentication** - Secure JWT-based authentication system
+- 🌓 **Dark/Light Mode** - Responsive theme support
+- 📱 **Responsive Design** - Optimized for all device sizes
+
+## 🏗️ Project Structure
+
+```
+src/
+├── app/
+│   ├── core/                    # Core services, guards, and interceptors
+│   │   ├── guards/              # Route guards (auth, role-based)
+│   │   ├── interceptors/        # HTTP interceptors
+│   │   └── services/            # Singleton services
+│   ├── features/                # Feature modules
+│   │   ├── admin/               # Admin dashboard & management
+│   │   ├── auth/                # Authentication (login, register)
+│   │   ├── cars/                # Car listing, details, management
+│   │   ├── favorites/           # User favorites
+│   │   ├── home/                # Home page
+│   │   └── profile/             # User profile
+│   └── shared/                  # Shared components & utilities
+│       ├── components/          # Reusable UI components
+│       └── models/              # TypeScript interfaces
+├── assets/                      # Static assets (images, icons)
+└── styles.css                   # Global styles
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher)
+- **Angular CLI** (v20.3.6)
 
-```bash
-ng generate component component-name
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/carnest-frontend.git
+   cd carnest-frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   ng serve
+   ```
+
+4. **Open your browser**
+   Navigate to `http://localhost:4200/`
+
+## 📜 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start development server |
+| `npm run build` | Build for production |
+| `npm run watch` | Build with watch mode |
+| `npm test` | Run unit tests |
+
+## 🔧 Configuration
+
+### Environment Setup
+
+The application connects to a backend API. Configure the API base URL in the environment files:
+
+```typescript
+// src/environments/environment.ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:5000/api'
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### TailwindCSS
 
-```bash
-ng generate --help
-```
+The project uses TailwindCSS for styling. Configuration can be found in `tailwind.config.js`.
 
-## Building
+## 🧪 Testing
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+### Unit Tests
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+### E2E Tests
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📦 Building for Production
 
-## Additional Resources
+```bash
+ng build --configuration production
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Build artifacts will be stored in the `dist/` directory.
+
+## 🔗 API Documentation
+
+A Postman collection is included in the repository: `CarNest_Postman_Collection.json`
+
+Import this collection into Postman to explore and test the API endpoints.
+
+## 🛠️ Tech Stack
+
+- **Framework**: Angular 20
+- **Language**: TypeScript 5.9
+- **Styling**: TailwindCSS 3.4
+- **HTTP Client**: Angular HttpClient with RxJS
+- **Authentication**: JWT (jwt-decode)
+- **Testing**: Karma + Jasmine
+- **Code Quality**: Prettier
+
+## 👥 User Roles
+
+| Role | Description |
+|------|-------------|
+| **Customer** | Browse cars, add to favorites, view details |
+| **Vendor** | List cars for rent, manage listings |
+| **Admin** | Full platform management, approve/reject listings |
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+**Built with ❤️ as an ITI .NET Graduation Project**

@@ -81,7 +81,7 @@ export class CarManageComponent implements OnInit {
       // New fields
       ExteriorColor: ['', [Validators.required, Validators.minLength(2)]],
       DrivetrainType: [null, Validators.required],
-      EngineCapacity: [null, [Validators.required, Validators.min(100), Validators.max(20000)]],
+      EngineCapacity: [null, [Validators.required, Validators.min(0.1), Validators.max(99.99)]],
       Horsepower: [null, [Validators.required, Validators.min(1), Validators.max(2000)]],
 
       MakeId: [null, Validators.required],
@@ -131,13 +131,13 @@ export class CarManageComponent implements OnInit {
       if (fieldName === 'Year') return 'Year must be 1900 or later';
       if (fieldName === 'Price') return 'Price must be greater than 0';
       if (fieldName === 'Mileage') return 'Mileage cannot be negative';
-      if (fieldName === 'EngineCapacity') return 'Engine capacity must be at least 100 cc';
+      if (fieldName === 'EngineCapacity') return 'Engine capacity must be at least 0.1 L';
       if (fieldName === 'Horsepower') return 'Horsepower must be at least 1';
       return `Minimum value is ${field.errors['min'].min}`;
     }
     if (field.errors['max']) {
       if (fieldName === 'Year') return `Year cannot exceed ${field.errors['max'].max}`;
-      if (fieldName === 'EngineCapacity') return 'Engine capacity cannot exceed 20,000 cc';
+      if (fieldName === 'EngineCapacity') return 'Engine capacity cannot exceed 99.99 L';
       if (fieldName === 'Horsepower') return 'Horsepower cannot exceed 2,000';
       return `Maximum value is ${field.errors['max'].max}`;
     }

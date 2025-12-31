@@ -123,10 +123,10 @@
                     <!-- Engine Capacity -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Engine Capacity
-                            (cc) <span class="text-red-500">*</span></label>
+                            (L) <span class="text-red-500">*</span></label>
                         <input type="number"
                             [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('EngineCapacity') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
-                            formControlName="EngineCapacity" placeholder="e.g. 2000" />
+                            formControlName="EngineCapacity" placeholder="e.g. 2.0" />
                         @if (isFieldInvalid('EngineCapacity')) {
                         <p class="mt-1 text-sm text-red-500 dark:text-red-400">
                             <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('EngineCapacity') }}
