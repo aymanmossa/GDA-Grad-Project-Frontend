@@ -48,6 +48,7 @@ export class CarManageComponent implements OnInit {
   errorMessage = signal<string | null>(null);
 
   uploadedFiles: any[] = [];
+  originalImageUrls: string[] = []; // Track original images to detect deletions
 
   // Car license file
   carLicenseFile: File | null = null;
@@ -131,13 +132,15 @@ export class CarManageComponent implements OnInit {
       });
 
       this.uploadedFiles = [];
+      this.originalImageUrls = []; // Reset original images
       if (res.imageUrls && res.imageUrls.length > 0) {
         res.imageUrls.forEach(imgUrl => {
           const fileName = imgUrl.split('/').pop();
+          this.originalImageUrls.push(imgUrl); // Track original image
           this.uploadedFiles.push({
             file: null,
             name: fileName,
-            originalName: fileName,
+            originalName: imgUrl, // Store full path for backend
             previewUrl: 'https://carnest.runasp.net/' + imgUrl,
             isOld: true,
             progress: 100
@@ -209,11 +212,28 @@ export class CarManageComponent implements OnInit {
     formData.append('LocId', String(value.LocId));
     formData.append('Description', value.Description ?? '');
 
-    const images = this.carForm.get('images')?.value;
-    if (images && images.length > 0) {
-      images.forEach((img: any) => {
-        formData.append('Images', img);
-      });
+    // Handle images: add new files and calculate deleted images
+    const remainingOldImageUrls: string[] = [];
+    this.uploadedFiles.forEach(f => {
+      if (f.file) {
+        // New image file
+        formData.append('Images', f.file);
+      } else if (f.isOld && f.originalName) {
+        // Track which old images are still present
+        remainingOldImageUrls.push(f.originalName);
+      }
+    });
+
+    // Calculate which images were deleted (original - remaining)
+    if (this.isEditMode && this.originalImageUrls.length > 0) {
+      const deletedImages = this.originalImageUrls.filter(
+        imgUrl => !remainingOldImageUrls.includes(imgUrl)
+      );
+      if (deletedImages.length > 0) {
+        // Send as JSON string as expected by backend
+        formData.append('imagesToDeleteJson', JSON.stringify(deletedImages));
+        console.log('Images to delete:', deletedImages);
+      }
     }
 
     // Car license file
