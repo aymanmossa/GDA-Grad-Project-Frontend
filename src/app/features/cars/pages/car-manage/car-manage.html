@@ -7,65 +7,105 @@
 
             <form [formGroup]="carForm" (ngSubmit)="onSubmit()">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Release Year -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Release
-                            Year</label>
+                            Year <span class="text-red-500">*</span></label>
                         <input type="number"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
-                            formControlName="Year" />
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('Year') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
+                            formControlName="Year" placeholder="e.g. 2023" />
+                        @if (isFieldInvalid('Year')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Year') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Price -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price <span
+                                class="text-red-500">*</span></label>
                         <input type="number"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
-                            formControlName="Price" />
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('Price') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
+                            formControlName="Price" placeholder="e.g. 500000" />
+                        @if (isFieldInvalid('Price')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Price') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Mileage -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mileage
-                            (km)</label>
+                            (km) <span class="text-red-500">*</span></label>
                         <input type="number"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
-                            formControlName="Mileage" />
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('Mileage') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
+                            formControlName="Mileage" placeholder="e.g. 50000" />
+                        @if (isFieldInvalid('Mileage')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Mileage') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Inspection Date -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Inspection
-                            Date</label>
+                            Date <span class="text-red-500">*</span></label>
                         <input type="date"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('LastInspectionDate') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="LastInspectionDate" />
+                        @if (isFieldInvalid('LastInspectionDate')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('LastInspectionDate')
+                            }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Condition -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Condition</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Condition <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('Condition') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="Condition">
                             <option [ngValue]="null">Select Condition</option>
                             <option [ngValue]="CarCondition.New">New</option>
                             <option [ngValue]="CarCondition.Used">Used</option>
                         </select>
+                        @if (isFieldInvalid('Condition')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Condition') }}
+                        </p>
+                        }
                     </div>
 
-
+                    <!-- Transmission -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transmission</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transmission
+                            <span class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('GearType') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="GearType">
                             <option [ngValue]="null">Select Transmission type</option>
                             <option [ngValue]="CarGearType.Manual">Manual</option>
                             <option [ngValue]="CarGearType.Automatic">Automatic</option>
                         </select>
+                        @if (isFieldInvalid('GearType')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('GearType') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Drivetrain -->
                     <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Drivetrain</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Drivetrain <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('DrivetrainType') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="DrivetrainType">
                             <option [ngValue]="null">Select Drivetrain</option>
                             <option [ngValue]="DrivetrainType.FWD">FWD (Front Wheel Drive)</option>
@@ -73,97 +113,163 @@
                             <option [ngValue]="DrivetrainType.AWD">AWD (All Wheel Drive)</option>
                             <option [ngValue]="DrivetrainType.FourWD">4WD (Four Wheel Drive)</option>
                         </select>
+                        @if (isFieldInvalid('DrivetrainType')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('DrivetrainType') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Engine Capacity -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Engine Capacity
-                            (L)</label>
+                            (cc) <span class="text-red-500">*</span></label>
                         <input type="number"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('EngineCapacity') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="EngineCapacity" placeholder="e.g. 2000" />
+                        @if (isFieldInvalid('EngineCapacity')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('EngineCapacity') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Horsepower -->
                     <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horsepower</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Horsepower <span
+                                class="text-red-500">*</span></label>
                         <input type="number"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('Horsepower') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="Horsepower" placeholder="e.g. 150" />
+                        @if (isFieldInvalid('Horsepower')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Horsepower') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Color -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color <span
+                                class="text-red-500">*</span></label>
                         <input type="text"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('ExteriorColor') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="ExteriorColor" placeholder="e.g. White" />
+                        @if (isFieldInvalid('ExteriorColor')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('ExteriorColor') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Brand -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Brand</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Brand <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('MakeId') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="MakeId" (change)="onMakeChange()">
                             <option [ngValue]="null">Select brand</option>
                             @for (m of makes(); track m.makeId) {
                             <option [ngValue]="m.makeId">{{ m.makeName }}</option>
                             }
                         </select>
+                        @if (isFieldInvalid('MakeId')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('MakeId') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Model -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Model</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Model <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('ModelId') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="ModelId">
                             <option [ngValue]="null">Select model</option>
                             @for (mod of models(); track mod.modelId) {
                             <option [ngValue]="mod.modelId">{{ mod.modelName }}</option>
                             }
                         </select>
+                        @if (isFieldInvalid('ModelId')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('ModelId') }}
+                        </p>
+                        }
                     </div>
+
+                    <!-- Body Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Body Type</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Body Type <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('BodyTypeId') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="BodyTypeId">
                             <option [ngValue]="null">Select body type</option>
                             @for (b of bodyTypes(); track b.bodyTypeId) {
                             <option [ngValue]="b.bodyTypeId">{{ b.name }}</option>
                             }
                         </select>
+                        @if (isFieldInvalid('BodyTypeId')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('BodyTypeId') }}
+                        </p>
+                        }
                     </div>
 
-
+                    <!-- Fuel -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fuel</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fuel <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('FuelId') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="FuelId">
                             <option [ngValue]="null">Select fuel</option>
                             @for (f of fuelTypes(); track f.fuelId) {
                             <option [ngValue]="f.fuelId">{{ f.name }}</option>
                             }
                         </select>
+                        @if (isFieldInvalid('FuelId')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('FuelId') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Location -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location <span
+                                class="text-red-500">*</span></label>
                         <select
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white ' + (isFieldInvalid('LocId') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
                             formControlName="LocId">
                             <option [ngValue]="null">Select location</option>
                             @for (l of locations(); track l.locId) {
                             <option [ngValue]="l.locId">{{ l.name }}</option>
                             }
                         </select>
+                        @if (isFieldInvalid('LocId')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('LocId') }}
+                        </p>
+                        }
                     </div>
 
+                    <!-- Description -->
                     <div class="col-span-full">
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description <span
+                                class="text-red-500">*</span></label>
                         <textarea
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
-                            rows="3" formControlName="Description"></textarea>
+                            [class]="'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 ' + (isFieldInvalid('Description') ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600')"
+                            rows="3" formControlName="Description"
+                            placeholder="Describe your car (at least 10 characters)"></textarea>
+                        @if (isFieldInvalid('Description')) {
+                        <p class="mt-1 text-sm text-red-500 dark:text-red-400">
+                            <i class="fa-solid fa-exclamation-circle mr-1"></i>{{ getErrorMessage('Description') }}
+                        </p>
+                        }
                     </div>
 
                     <div class="col-span-full">

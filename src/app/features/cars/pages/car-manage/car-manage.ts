@@ -68,9 +68,10 @@ export class CarManageComponent implements OnInit {
   }
 
   private initForm() {
+    const currentYear = new Date().getFullYear();
     this.carForm = this.fb.group({
-      Year: [null, Validators.required],
-      Price: [null, Validators.required],
+      Year: [null, [Validators.required, Validators.min(1900), Validators.max(currentYear + 1)]],
+      Price: [null, [Validators.required, Validators.min(1)]],
 
       Condition: [null, Validators.required],
       Mileage: [null, [Validators.required, Validators.min(0)]],
@@ -78,20 +79,74 @@ export class CarManageComponent implements OnInit {
       GearType: [null, Validators.required],
 
       // New fields
-      ExteriorColor: ['', Validators.required],
+      ExteriorColor: ['', [Validators.required, Validators.minLength(2)]],
       DrivetrainType: [null, Validators.required],
-      EngineCapacity: [null, [Validators.required, Validators.min(0)]],
-      Horsepower: [null, [Validators.required, Validators.min(0)]],
+      EngineCapacity: [null, [Validators.required, Validators.min(100), Validators.max(20000)]],
+      Horsepower: [null, [Validators.required, Validators.min(1), Validators.max(2000)]],
 
       MakeId: [null, Validators.required],
       ModelId: [null, Validators.required],
       BodyTypeId: [null, Validators.required],
       FuelId: [null, Validators.required],
       LocId: [null, Validators.required],
-      Description: ['', Validators.required],
+      Description: ['', [Validators.required, Validators.minLength(10)]],
       images: [null],
       carLicense: [null] // Car license image for admin approval
     });
+  }
+
+  // Helper method to check if a field is invalid and touched
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.carForm.get(fieldName);
+    return !!(field && field.invalid && field.touched);
+  }
+
+  // Helper method to get error message for a field
+  getErrorMessage(fieldName: string): string {
+    const field = this.carForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.errors['required']) {
+      const fieldLabels: Record<string, string> = {
+        'Year': 'Release Year',
+        'Price': 'Price',
+        'Condition': 'Condition',
+        'Mileage': 'Mileage',
+        'LastInspectionDate': 'Inspection Date',
+        'GearType': 'Transmission',
+        'ExteriorColor': 'Color',
+        'DrivetrainType': 'Drivetrain',
+        'EngineCapacity': 'Engine Capacity',
+        'Horsepower': 'Horsepower',
+        'MakeId': 'Brand',
+        'ModelId': 'Model',
+        'BodyTypeId': 'Body Type',
+        'FuelId': 'Fuel Type',
+        'LocId': 'Location',
+        'Description': 'Description'
+      };
+      return `${fieldLabels[fieldName] || 'This field'} is required`;
+    }
+    if (field.errors['min']) {
+      if (fieldName === 'Year') return 'Year must be 1900 or later';
+      if (fieldName === 'Price') return 'Price must be greater than 0';
+      if (fieldName === 'Mileage') return 'Mileage cannot be negative';
+      if (fieldName === 'EngineCapacity') return 'Engine capacity must be at least 100 cc';
+      if (fieldName === 'Horsepower') return 'Horsepower must be at least 1';
+      return `Minimum value is ${field.errors['min'].min}`;
+    }
+    if (field.errors['max']) {
+      if (fieldName === 'Year') return `Year cannot exceed ${field.errors['max'].max}`;
+      if (fieldName === 'EngineCapacity') return 'Engine capacity cannot exceed 20,000 cc';
+      if (fieldName === 'Horsepower') return 'Horsepower cannot exceed 2,000';
+      return `Maximum value is ${field.errors['max'].max}`;
+    }
+    if (field.errors['minlength']) {
+      if (fieldName === 'ExteriorColor') return 'Color must be at least 2 characters';
+      if (fieldName === 'Description') return 'Description must be at least 10 characters';
+      return `Minimum length is ${field.errors['minlength'].requiredLength} characters`;
+    }
+    return 'Invalid value';
   }
 
   private loadLookups() {
